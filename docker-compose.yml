@@ -2,20 +2,26 @@ version: '3'
 
 services:
 
+  # Kafka manager
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
-    container_name: zookeeper
+    container_name: data-engineer_zookeeper
+    networks:
+      - data-engineer_network
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
+  # Kafka broker
   broker:
     image: confluentinc/cp-kafka:7.0.1
-    container_name: broker
+    container_name: data-engineer_broker
     ports:
       - "9092:9092"
     depends_on:
       - zookeeper
+    networks:
+      - data-engineer_network
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -24,3 +30,46 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  # Compute events
+  spark:
+    container_name: data-engineer_spark
+    build:
+      context: spark/
+    image: local/data-engineer-spark
+    hostname: spark
+    volumes:
+      - .:/src/
+    networks:
+      - data-engineer_network
+    environment:
+      PYSPARK_PYTHON: python3
+      DOMAIN: dev.famoco.com
+      ATNA_DB_HOST: localhost
+      ATNA_DB_NAME: postgres
+      ATNA_DB_USERNAME: admin
+      ATNA_DB_PASSWORD: admin
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    command: bash
+
+  # SQL database
+  sql:
+    hostname: sql
+    container_name: data-engineer_sql
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+    ports:
+      - '5432:5432'
+    volumes:
+      - data-engineer_sql-data:/var/lib/postgresql/data
+    networks:
+      - data-engineer_network
+
+networks:
+  data-engineer_network:
+volumes:
+  data-engineer_sql-data:
