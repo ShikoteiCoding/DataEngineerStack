@@ -20,11 +20,11 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 ### Design
 
 ```
-+------------+           +----------+        +----------+        +----------+
-|            |  JSON     |          |  JSON  | Pyspark  |   SQL  |          | 
-| Data Faker | +-------> |  Kafka   | +----> |   Stream | +----> | Postgres | +---->
-|            |           |          |        |          |        |          |
-+------------+           +----------+        +----------+        +----------+
++------------+           +----------+           +----------+           +----------+        +----------+
+|            |  JSON     |          |  JSON     |          |  JSON     | Pyspark  |   SQL  |          | 
+| Data Faker | +-------> |  Collect | +-------> |  Kafka   | +-------> |   Stream | +----> | Postgres |
+|            |           |          |           |          |           |          |        |          |
++------------+           +----------+           +----------+           +----------+        +----------+
 ```
 
 If needed we might add additional layers or forking of our pipeline which is yet quite simple. We might also want to deal with multiple pyspark streams through a kubernetes or any other container orchestrater.
