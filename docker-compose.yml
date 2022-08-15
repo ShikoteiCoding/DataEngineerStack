@@ -3,6 +3,17 @@ version: '3'
 services:
 
   # Events consumer, put into queue
+  faker:
+    container_name: data-engineer_faker
+    build:
+      context: faker/
+    image: local/data-engineer-faker
+    networks:
+      - data-engineer_network
+    volumes:
+      - ./faker/app:/app
+
+  # Events consumer, put into queue
   collector:
     image: docker.elastic.co/logstash/logstash-oss:7.16.1
     hostname: collector

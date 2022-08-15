@@ -1,1 +1,2 @@
-pykafka>=2.8, <2.9
+requests==2.28.1
+pyyaml==6.0
