@@ -2,26 +2,28 @@ version: '3'
 
 services:
 
-  # Events consumer, put into queue
+  # Events creator, push to collector
   faker:
     container_name: data-engineer_faker
+    image: local/data-engineer-faker
     build:
       context: ./faker
       dockerfile: Dockerfile
-    image: local/data-engineer-faker
-    networks:
-      - data-engineer_network
+    depends_on:
+      - collector
     environment:
       COLLECTOR_HOST: collector
       COLLECTOR_PORT: 8080
+    networks:
+      - data-engineer_network
     volumes:
       - ./faker/app:/app
 
   # Events consumer, put into queue
   collector:
+    container_name: data-engineer_collector
     image: docker.elastic.co/logstash/logstash-oss:7.16.1
     hostname: collector
-    container_name: data-engineer_collector
     depends_on:
       - broker
     networks:
@@ -35,25 +37,21 @@ services:
   # Queue
   # Kafka manager
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
     container_name: data-engineer_zookeeper
-    networks:
-      - data-engineer_network
+    image: confluentinc/cp-zookeeper:7.0.1
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - data-engineer_network
 
   # Kafka broker
   broker:
-    image: confluentinc/cp-kafka:7.0.1
     container_name: data-engineer_broker
+    image: confluentinc/cp-kafka:7.0.1
     hostname: broker
-    ports:
-      - "9092:9092"
     depends_on:
       - zookeeper
-    networks:
-      - data-engineer_network
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -62,18 +60,18 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - data-engineer_network
+    ports:
+      - "9092:9092"
 
   # Compute events
   spark:
     container_name: data-engineer_spark
+    image: local/data-engineer-spark
     build:
       context: spark/
-    image: local/data-engineer-spark
     hostname: spark
-    volumes:
-      - .:/src/
-    networks:
-      - data-engineer_network
     environment:
       PYSPARK_PYTHON: python3
       DOMAIN: dev.famoco.com
@@ -81,6 +79,10 @@ services:
       ATNA_DB_NAME: postgres
       ATNA_DB_USERNAME: admin
       ATNA_DB_PASSWORD: admin
+    networks:
+      - data-engineer_network
+    volumes:
+      - .:/src/
     tty: true
     stdin_open: true
     restart: unless-stopped
@@ -94,12 +96,12 @@ services:
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=admin
-    ports:
-      - '5432:5432'
     volumes:
       - data-engineer_sql-data:/var/lib/postgresql/data
     networks:
       - data-engineer_network
+    ports:
+      - '5432:5432'
 
 networks:
   data-engineer_network:
