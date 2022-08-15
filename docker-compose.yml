@@ -10,6 +10,8 @@ services:
     image: local/data-engineer-faker
     networks:
       - data-engineer_network
+    environment:
+      COLLECTOR_ENDPOINT: collector:8080
     volumes:
       - ./faker/app:/app
 
