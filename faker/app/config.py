@@ -7,6 +7,7 @@ class Config:
     collector_host: str | None = field(default=None)
     collector_port: str | None = field(default=None)
 
+    @property
     def _collector_url(self) -> str:
         if self.collector_host and self.collector_port:
             return f"http://{self.collector_host}:{self.collector_port}"

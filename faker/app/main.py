@@ -23,10 +23,11 @@ def faker_engine(c: Config, generator: Callable):
     """ Faker Engine goes here. """
     while True:
         data = generator()
-        requests.post(c.collector_url, json=data) # type: ignore
+        res = requests.post(c._collector_url, json=data)
+        print(res.json())
 
 if __name__ == "__main__":
-    """ Generate data from here. """
+
     c = load(load_collector_opts)
 
     faker_engine(c, stupid_generator)
