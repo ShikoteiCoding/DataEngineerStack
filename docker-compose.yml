@@ -17,7 +17,7 @@ services:
     networks:
       - data-engineer_network
     volumes:
-      - ./faker/app:/app
+      - ./faker/app:/code/app
 
   # Events consumer, put into queue
   collector:
