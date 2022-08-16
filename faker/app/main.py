@@ -5,6 +5,7 @@ from config import load_conf as load, load_collector_opts, Config
 
 import datetime
 import time
+import json
 
 def stupid_generator() -> dict:
     """ Simple generator. No variation, just reproducing """
@@ -14,7 +15,7 @@ def stupid_generator() -> dict:
             "timestamp": str(datetime.datetime.now()),
             "message": {
                 "metric": "TELEMETRY_MEASURE",
-                "vale": 12
+                "vale": 15
             }
         }
     }
@@ -24,7 +25,7 @@ def faker_engine(c: Config, generator: Callable):
     while True:
         data = generator()
         res = requests.post(c._collector_url, json=data)
-        print(res.json())
+        print(res)
 
 if __name__ == "__main__":
 
