@@ -22,7 +22,7 @@ services:
   # Events consumer, put into queue
   collector:
     container_name: data-engineer_collector
-    image: docker.elastic.co/logstash/logstash-oss:7.16.1
+    image: docker.elastic.co/logstash/logstash-oss:8.3.3
     hostname: collector
     depends_on:
       - broker
@@ -38,7 +38,7 @@ services:
   # Kafka manager
   zookeeper:
     container_name: data-engineer_zookeeper
-    image: confluentinc/cp-zookeeper:7.0.1
+    image: confluentinc/cp-zookeeper:7.2.1
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -48,7 +48,7 @@ services:
   # Kafka broker
   broker:
     container_name: data-engineer_broker
-    image: confluentinc/cp-kafka:7.0.1
+    image: confluentinc/cp-kafka:7.2.1
     hostname: broker
     depends_on:
       - zookeeper
