@@ -1,7 +1,10 @@
 # DataEngineerStack
-Simple stack tools to showcase some basics.
+Model data stack tools to showcase some basics.
 
 Demonstrate a simple data stack and implements some additional features to play with.
+Built upon event-driven architecture. Should be what modern companies use if they have access to DevOps and Data Engineer resources.
+
+Not tight to any cloud provider, easy to migrate and maintain.
 
 ## Stack
 
@@ -20,11 +23,12 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 ### Design
 
 ```
-+------------+           +----------+           +----------+           +----------+        +----------+
-|            |  JSON     |          |  JSON     |          |  JSON     | Pyspark  |   SQL  |          | 
-| Data Faker | +-------> |  Collect | +-------> |  Kafka   | +-------> |   Stream | +----> | Postgres |
-|            |           |          |           |          |           |          |        |          |
-+------------+           +----------+           +----------+           +----------+        +----------+
++------------+           +-----------+           +----------+           +----------+        +----------+
+|            |  JSON     |           |  JSON     |          |  JSON     | Pyspark  |   SQL  |          | 
+| Data Faker | +-------> |  Logstash | +-------> |  Kafka   | +-------> |   Stream | +----> | Postgres |
+|            |           |           |           |          |           |          |        |          |
++------------+           +-----------+           +----------+           +----------+        +----------+
 ```
 
-If needed we might add additional layers or forking of our pipeline which is yet quite simple. We might also want to deal with multiple pyspark streams through a kubernetes or any other container orchestrater.
+Some additionnal tools are easy to plug, kafka and pyspark are very versatile.
+We might add an orchestrater to simulate more complex deployments (Kubernetes ?).
