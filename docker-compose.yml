@@ -74,7 +74,6 @@ services:
     hostname: spark
     environment:
       PYSPARK_PYTHON: python3
-      DOMAIN: dev.famoco.com
       ATNA_DB_HOST: localhost
       ATNA_DB_NAME: postgres
       ATNA_DB_USERNAME: admin
