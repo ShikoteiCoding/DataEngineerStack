@@ -32,3 +32,14 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 
 Some additionnal tools are easy to plug, kafka and pyspark are very versatile.
 We might add an orchestrater to simulate more complex deployments (Kubernetes ?).
+
+## Installation
+
+### Kubernetes 
+
+Macos:
+```
+brew update
+brew install hyperkit
+brew install minikube
+```
