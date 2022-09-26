@@ -33,13 +33,23 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 Some additionnal tools are easy to plug, kafka and pyspark are very versatile.
 We might add an orchestrater to simulate more complex deployments (Kubernetes ?).
 
-## Installation
+## Local Installation
 
-### Kubernetes 
+### Kubernetes / Minikube
 
 Macos:
 ```
 brew update
 brew install hyperkit
 brew install minikube
+```
+
+## Start
+
+### Minikube
+
+As we are full local for now, we start with a minikube local nodes. Remember, with Minikube the master nodes and kubernetes nodes are all running in a local VM. Usually it is not the case.
+
+```
+minikube start --vm-driver=hyperkit
 ```
