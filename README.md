@@ -53,3 +53,12 @@ As we are full local for now, we start with a minikube local nodes. Remember, wi
 ```
 minikube start --vm-driver=hyperkit
 ```
+
+#### Deployments
+
+We are going to deploy the services. We do it manually at first but we might use Kompose later.
+
+```
+kubectl create deployment data-engineer-db --image=postgres
+```
+
