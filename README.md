@@ -42,6 +42,8 @@ Macos:
 brew update
 brew install hyperkit
 brew install minikube
+
+brew install multipass
 ```
 
 ## Start
@@ -50,15 +52,33 @@ brew install minikube
 
 As we are full local for now, we start with a minikube local nodes. Remember, with Minikube the master nodes and kubernetes nodes are all running in a local VM. Usually it is not the case.
 
+Starting a minikube VM:
 ```
 minikube start --vm-driver=hyperkit
 ```
 
-#### Deployments
-
-We are going to deploy the services. We do it manually at first but we might use Kompose later.
-
+Stopping a minikube VM:
 ```
-kubectl create deployment data-engineer-db --image=postgres
+minikube stop
 ```
 
+### K3S
+
+Trying K3S instead of minikube as it is nearer production environment while being more lightweight.
+
+Creating a VM for k3s with multipass:
+```
+multipass launch --name control-plane-k3s --cpus 2 --nem 2058M --disk 5G focal
+```
+
+Login to the VM:
+```
+multipass shell control-plane-k3s
+```
+
+Inside the VM, install K3S:
+```
+sudo apt update
+sudo apt upgrade
+curl -sfL https://get.k3s.io | sh -
+```
