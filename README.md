@@ -64,14 +64,19 @@ minikube stop
 
 ### K3S
 
-Trying K3S instead of minikube as it is nearer production environment while being more lightweight.
+#### Creating the master (control-plane) node:
 
-Creating a VM for k3s with multipass:
+Create the node from host machine:
 ```
 multipass launch --name control-plane-k3s --cpus 2 --nem 2058M --disk 5G focal
 ```
 
-Login to the VM:
+Start the node if already created:
+```
+multipass start
+```
+
+Login to the node:
 ```
 multipass shell control-plane-k3s
 ```
@@ -81,4 +86,34 @@ Inside the VM, install K3S:
 sudo apt update
 sudo apt upgrade
 curl -sfL https://get.k3s.io | sh -
+```
+
+Get the master node token and the IP:
+```
+sudo cat /var/lib/rancher/k3s/server/node-token
+multipass list
+```
+
+#### Creating child node
+
+Create the node from host machine:
+```
+multipass launch — name child-node-name — cpus 2 — mem 2048M — disk 5G focal
+```
+
+Login to the node (replace the name):
+```
+multipass shell child-node-name
+```
+
+Inside the node, install k3s and link the child node to the master node (with above mentionned token and ip address):
+```
+sudo apt update
+sudo apt upgrade
+curl -sfL https://get.k3s.io | K3S_URL=https://master-node-ip:6443 K3S_TOKEN=master-node-token sh -
+```
+
+List the child nodes from the master node (log inside):
+```
+sudo kubectl get node -o wide
 ```
