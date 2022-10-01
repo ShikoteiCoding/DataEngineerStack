@@ -29,7 +29,7 @@ services:
     networks:
       - data-engineer_network
     volumes:
-      - ./logstash-recorder.conf:/logstash.conf
+      - ./logstash-collector.conf:/logstash.conf
     command: logstash -f /logstash.conf
     ports:
       - "8080:8080"
