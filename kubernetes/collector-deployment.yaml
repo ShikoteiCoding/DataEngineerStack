@@ -17,13 +17,13 @@ spec:
       hostname: collector
       containers:
       - name: collector
+        image: docker.elastic.co/logstash/logstash-oss:8.3.3
         ports:
           - containerPort: 8080
             name: logstash
-        image: docker.elastic.co/logstash/logstash-oss:8.3.3
-        volumeMounts:
-        - name: collector-config
-          mountPath: /usr/share/logstash/pipeline/
+#        volumeMounts:
+#        - name: collector-config
+#          mountPath: /usr/share/logstash/pipeline/
 #        command:
 #        - logstash
 #      volumes:
