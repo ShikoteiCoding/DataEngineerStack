@@ -19,8 +19,8 @@ spec:
       - name: collector
         image: docker.elastic.co/logstash/logstash-oss:8.3.3
         ports:
-          - containerPort: 8080
-            name: logstash
+        - containerPort: 8080
+#          name: logstash
 #        volumeMounts:
 #        - name: collector-config
 #          mountPath: /usr/share/logstash/pipeline/
