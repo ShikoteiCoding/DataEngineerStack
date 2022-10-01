@@ -63,3 +63,6 @@ List the child nodes from the master node (log inside):
 ```
 sudo kubectl get node -o wide
 ```
+
+## Anexes
+https://www.weave.works/blog/kafka-on-kubernetes-and-deploying-best-practice
