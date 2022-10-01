@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: collector-service
+spec:
+  selector:
+    app: collector
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
