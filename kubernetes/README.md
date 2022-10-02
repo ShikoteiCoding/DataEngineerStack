@@ -65,4 +65,7 @@ sudo kubectl get node -o wide
 ```
 
 ## Anexes
+
+### Helper URLs
 https://www.weave.works/blog/kafka-on-kubernetes-and-deploying-best-practice
+https://github.com/superseb/multipass-k3s/blob/master/multipass-k3s.sh
