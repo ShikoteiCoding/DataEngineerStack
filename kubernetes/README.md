@@ -14,12 +14,12 @@ brew install multipass
 
 Create the node from host machine:
 ```
-multipass launch --name control-plane-k3s --cpus 2 --nem 2058M --disk 5G focal
+multipass launch --name control-plane-k3s --cpus 2 --mem 2048M --disk 5G focal
 ```
 
 Start the node if already created:
 ```
-multipass start
+multipass start control-plane-k3s
 ```
 
 Login to the node:
