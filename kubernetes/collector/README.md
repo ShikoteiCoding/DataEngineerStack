@@ -2,7 +2,7 @@
 
 Create the node
 ```
-multipass launch --name collector-node --mem 128M --disk 5G focal
+multipass launch --name collector-node --mem 512M --disk 5G focal
 ```
 
 ```
