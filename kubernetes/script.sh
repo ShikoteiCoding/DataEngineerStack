@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-CONTROL_PLANE_TOKEN="" # Master node token
+CONTROL_PLANE_TOKEN="K10db85acbbade8b2e7df2057aa8c51eaf60964fe2703c174064df0b0b6becb8d87::server:eb6d552feec9d8fd9b28ca70d206c1a2" # Master node token
 
 # Check multipass binary
 if [ -x "$(command -v multipass.exe)" > /dev/null 2>&1 ]; then
@@ -12,16 +12,11 @@ else
     echo "The multipass binary (multipass or multipass.exe) is not available or not in your \$PATH"
     exit 1
 fi
-echo $MULTIPASSCMD
 
-if [ -n "$MERGE_KUBECONFIG" ]; then
-    if [ -z "$KUBECONFIG" ]; then
-        echo "Environment variable KUBECONFIG is empty, can't merge kubeconfig"
-        exit 1
-    fi
-fi
-
-if [ -z $CONTROL_PLANE_TOKEN ]; then
-    CONTROL_PLANE_TOKEN=$(cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1 | tr '[:upper:]' '[:lower:]')
-    echo "No server token given, generated server token: ${CONTROL_PLANE_TOKEN}"
-fi
+# Start the collector node
+multipass start collector-node
+while [[ $(multipass exec collector-node sudo kubectl get nodes  --no-header 2>/dev/null | grep -c -v "not found") ]];
+do 
+    echo "Waiting for collector-node to start...";
+    sleep 2; 
+done
