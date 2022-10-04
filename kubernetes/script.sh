@@ -20,3 +20,11 @@ do
     echo "Waiting for collector-node to start...";
     sleep 2; 
 done
+
+# Start the bropker node
+multipass start broker-node
+while [[ $(multipass exec broker-node sudo kubectl get nodes  --no-header 2>/dev/null | grep -c -v "not found") ]];
+do 
+    echo "Waiting for broker-node to start...";
+    sleep 2; 
+done
