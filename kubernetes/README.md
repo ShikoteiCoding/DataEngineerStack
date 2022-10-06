@@ -44,7 +44,7 @@ multipass list
 
 Create the node from host machine:
 ```
-multipass launch — name child-node-name — cpus 2 — mem 2048M — disk 5G focal
+multipass launch --name child-node --mem 512M --disk 5G focal
 ```
 
 Login to the node (replace the name):
