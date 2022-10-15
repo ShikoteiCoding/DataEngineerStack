@@ -1,6 +1,10 @@
-# Local Kubernetes Installation
+# Local Kubernetes Installation for Macos (sorry)
 
-## K3S
+This readme is giving requirements and commands to install and build locally k3s and provided stack for macos. Deployment of k3s for ubuntu does not need multipass.
+
+## Multipass for k3s
+
+Install multipass for macos here: https://multipass.run/install
 
 Macos:
 ```
@@ -8,29 +12,36 @@ brew update
 brew install multipass
 ```
 
-# Start
+# Installation
 
-## Creating the master node (control-plane) :
+For simplicity purpose we will deploy only one node with multiple pods inside. As this is a local deployment there is not specific need to complexify the stack with slave nodes.
 
-Create the node from host machine:
-```
-multipass launch --name control-plane-k3s --cpus 2 --mem 2048M --disk 5G focal
-```
+## VM Build with k3s
 
-Start the node if already created:
-```
-multipass start control-plane-k3s
-```
+### Manual build
 
-Login to the node:
+Create a VM
 ```
-multipass shell control-plane-k3s
+multipass launch --name data-engineer-k3s --cpus 2 --mem 2048M --disk 5G focal
 ```
 
-Inside the VM, install K3S:
+Start the VM
 ```
-sudo apt update
-sudo apt upgrade
+multipass start data-engineer-k3s
+```
+
+Upgrade apt inside the VM
+```
+multipass shell data-engineer-k3s
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+Restart the VM and install k3s
+```
+multipass stop data-engineer-k3s
+multipass start data-engineer-k3s
+multipass shell data-engineer-k3s
 curl -sfL https://get.k3s.io | sh -
 ```
 
@@ -40,28 +51,9 @@ sudo cat /var/lib/rancher/k3s/server/node-token
 multipass list
 ```
 
-## Creating a child node
-
-Create the node from host machine:
+### Automatic build
 ```
-multipass launch --name child-node --mem 512M --disk 5G focal
-```
-
-Login to the node (replace the name):
-```
-multipass shell child-node-name
-```
-
-Inside the node, install k3s and link the child node to the master node (with above mentionned token and ip address):
-```
-sudo apt update
-sudo apt upgrade
-curl -sfL https://get.k3s.io | K3S_URL=https://master-node-ip:6443 K3S_TOKEN=master-node-token sh -
-```
-
-List the child nodes from the master node (log inside):
-```
-sudo kubectl get node -o wide
+bash kubernetes/script.sh
 ```
 
 ## Anexes
