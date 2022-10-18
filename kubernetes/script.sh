@@ -21,6 +21,11 @@ else
     RAM="${RAM}G"
 fi
 
+SetupConfig() {
+    echo "Setup the k3s context..."
+    multipass exec $CONTROL_NODE -- sudo sh setup-config.sh
+}
+
 InitVM() {
     echo "Initializing the VM..."
     echo "Updating apt package, installing..."
@@ -50,4 +55,5 @@ if ! $(multipass list | grep -q $CONTROL_NODE); then
 else
     echo "The control plane VM is found ... Starting it..."
     multipass start $CONTROL_NODE
+    SetupConfig
 fi
