@@ -52,8 +52,9 @@ multipass list
 ```
 
 ### Automatic build
+
 ```
-bash kubernetes/script.sh
+bash kubernetes/script.sh athena-k3s 10
 ```
 
 ## Anexes
