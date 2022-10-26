@@ -5,6 +5,8 @@ from typing import Callable, TypeAlias
 @dataclass(slots=True)
 class Config:
     collector_url: str = field(default="")
+    
+    log_level: str = field(default="")
 
     @property
     def _http_collector_url(self) -> str:
@@ -17,6 +19,8 @@ ConfigOptions: TypeAlias = Callable[[Config], None]
 def load_conf(*opts: ConfigOptions) -> Config:
     """ Return a config according to  """
     c = Config()
+
+    c.log_level = os.getenv("LOG_LEVEL", "DEBUG")
 
     for opt in opts:
         opt(c)
