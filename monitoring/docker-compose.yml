@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:${PROMETHEUS_VERSION}
+    container_name: stack-prometheus
+    ports:
+      - 9090:9090
+    networks:
+      - network-stack-monitoring
+    volumes:
+      - "./conf/prometheus/config.yml:/etc/prometheus/prometheus.yml"
+
+  grafana:
+    image: grafana/grafana:${GRAFANA_VERSION}
+    container_name: stack-grafana
+    ports:
+      - 3000:3000
+    networks:
+      - network-stack-monitoring
+    depends_on:
+      - stack-prometheus
+
+networks:
+  network-stack-monitoring:
