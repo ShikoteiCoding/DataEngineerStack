@@ -7,25 +7,29 @@ import datetime
 import time
 import json
 
-def stupid_generator() -> dict:
+def stupid_generator():
     """ Simple generator. No variation, just reproducing """
-    time.sleep(2)
-    return {
-        "body": {
-            "timestamp": str(datetime.datetime.now()),
-            "message": {
-                "metric": "TELEMETRY_MEASURE",
-                "vale": 15
+    counter = 0
+    while True:
+        counter += 1
+        yield {
+            "body": {
+                "timestamp": str(datetime.datetime.now()),
+                "message": {
+                    "metric": "TELEMETRY_MEASURE",
+                    "value": 15
+                },
+                "count": counter
             }
         }
-    }
+        time.sleep(2)
 
 def faker_engine(c: Config, generator: Callable):
     """ Faker Engine goes here. """
-    while True:
-        data = generator()
-        res = requests.post(c._collector_url, json=data)
-        print(res)
+    for data in generator():
+        print(data)
+        #res = requests.post(c._http_collector_url, json=data)
+        #print(res)
 
 if __name__ == "__main__":
 
