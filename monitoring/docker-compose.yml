@@ -14,12 +14,19 @@ services:
   grafana:
     image: grafana/grafana:${GRAFANA_VERSION}
     container_name: stack-grafana
+    restart: unless-stopped
     ports:
       - 3000:3000
     networks:
       - network-stack-monitoring
     depends_on:
       - stack-prometheus
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
+    volumes:
+      - "./conf/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml"
+      - "./conf/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/fs.yml"
+      - "./conf/grafana/dashboards/:/var/lib/grafana/dashboards"
 
 networks:
   network-stack-monitoring:
