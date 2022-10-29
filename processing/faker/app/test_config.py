@@ -1,26 +1,23 @@
 import unittest
 import os
 
-from config import load_conf as load, load_collector_opts
+from config import load as load_config
 
-COLLECTOR_URL = "hostname:8080"
-HTTP_COLLECTOR_URL = "http://hostname:8080"
+OUTPUT = "collector"
+COLLECTOR_URL = "collector:8080"
 
-class TestConfig(unittest.TestCase):
+sample_configuration = """
+output:
+    collector:
+        endpoint: collector:8080
+"""
+
+class TestYaml(unittest.TestCase):
     """ Test Config Loadings """
 
-    def setUp(self):
-        os.environ["COLLECTOR_URL"] = COLLECTOR_URL
-
-    def test_load_collector(self):
-        c = load(load_collector_opts)
-
-        self.assertEqual(c.collector_url, COLLECTOR_URL)
-
-    def test_url_collector(self):
-        c = load(load_collector_opts)
-
-        self.assertEqual(c._http_collector_url, HTTP_COLLECTOR_URL)
+    def test_settings(self):
+        c = load_config(sample_configuration)
+        self.assertEqual(c["output"]["collector"]["endpoint"], COLLECTOR_URL)
 
         
 if __name__ == '__main__':

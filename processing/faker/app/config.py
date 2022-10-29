@@ -2,31 +2,17 @@ import os
 from dataclasses import dataclass, field
 from typing import Callable, TypeAlias
 
-@dataclass(slots=True)
-class Config:
-    collector_url: str = field(default="")
-    
-    log_level: str = field(default="")
+from os import getenv
+from pathlib import Path
+from ruamel.yaml import YAML
 
-    @property
-    def _http_collector_url(self) -> str:
-        if self.collector_url:
-            return f"http://{self.collector_url}"
-        return ""
+def load(stream: Path | str =Path(getenv("PIPELINE_CONF", "messages/mygenerator.yaml"))) -> dict:
+    """ Load config to build generator. """
+    # Read pipeline configuration as a YAML file
+    config = YAML().load(stream)
+    print(config)
 
-ConfigOptions: TypeAlias = Callable[[Config], None]
+    # Set globals settings from env
+    config.log_level = getenv("LOG_LEVEL", "INFO").upper()
 
-def load_conf(*opts: ConfigOptions) -> Config:
-    """ Return a config according to  """
-    c = Config()
-
-    c.log_level = os.getenv("LOG_LEVEL", "DEBUG")
-
-    for opt in opts:
-        opt(c)
-
-    return c
-
-def load_collector_opts(c: Config) -> None:
-    """ Config for collector sink. """
-    c.collector_url = os.getenv("COLLECTOR_URL", "").replace("http://", "")
+    return config

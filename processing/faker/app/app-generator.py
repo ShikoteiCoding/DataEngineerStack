@@ -7,7 +7,8 @@ import time
 import json
 
 from typing import Callable
-from config import load_conf as load, load_collector_opts, Config
+
+from config import load as load_config
 
 
 def stupid_generator():
@@ -37,8 +38,8 @@ def faker_engine(c: Config, generator: Callable):
 
 if __name__ == "__main__":
 
-    c = load(load_collector_opts)
+    c = load_config("messages/mygenerator.yaml")
 
-    logging.basicConfig(level=c.log_level)
+    logging.basicConfig(level=c["log_level"])
 
     faker_engine(c, stupid_generator)
