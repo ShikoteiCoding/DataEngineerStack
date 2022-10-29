@@ -25,12 +25,12 @@ def stupid_generator():
         }
         time.sleep(2)
 
-def faker_engine(c: Config, generator: Callable):
+def faker_engine(c: dict, generator: Callable):
     """ Faker Engine goes here. """
     for data in generator():
         logging.debug(f"Data generated: {data}")
         try:
-            res = requests.post(c._http_collector_url, json=data)
+            res = requests.post(c["output"]["collector"]["endpoint"], json=data)
             logging.debug(f"Successfully posting to collector: {res}")
         except Exception as e:
             logging.error(f"Unreachable collector. {e}.")
