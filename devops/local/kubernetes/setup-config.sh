@@ -4,8 +4,8 @@ echo "Setup the k3s config..."
 
 # Checking the kubeconfig
 if ! echo $KUBECONFIG | grep -q "$HOME/.kube/config" ; then
-    echo "KUBECONFIG=$HOME/.kube/config" > $PWD/variables.sh
-    source $PWD/variables.sh
+    sudo echo 'export APP=/opt/tinyos-2.x/apps' >> $HOME/.bashrc
+    sudo source $HOME/.bashrc
 fi
 
 # Creating the directory

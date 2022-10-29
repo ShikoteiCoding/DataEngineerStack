@@ -54,7 +54,7 @@ multipass list
 ### Automatic build
 
 ```
-bash kubernetes/script.sh local-k3s 10
+bash script.sh local-k3s 10
 ```
 
 ## Anexes
