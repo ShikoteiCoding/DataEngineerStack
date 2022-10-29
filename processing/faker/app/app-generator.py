@@ -1,12 +1,10 @@
-import os
 import logging
 import requests
-
 import datetime
 import time
-import json
 
 from typing import Callable
+from prometheus_client import start_http_server
 
 from config import load as load_config
 
@@ -37,6 +35,8 @@ def faker_engine(c: dict, generator: Callable):
         
 
 if __name__ == "__main__":
+    # Metrics to get strapped
+    start_http_server(8000)
 
     c = load_config("messages/mygenerator.yaml")
 
