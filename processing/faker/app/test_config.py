@@ -2,6 +2,7 @@ import unittest
 import os
 
 from config import load as load_config
+from pathlib import Path
 
 OUTPUT = "collector"
 COLLECTOR_URL = "collector:8080"

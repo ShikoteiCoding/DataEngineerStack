@@ -4,6 +4,7 @@ import datetime
 import time
 
 from typing import Callable
+from pathlib import Path
 from prometheus_client import start_http_server
 
 from config import load as load_config
@@ -28,18 +29,17 @@ def faker_engine(c: dict, generator: Callable):
     for data in generator():
         logging.debug(f"Data generated: {data}")
         try:
-            res = requests.post(c["output"]["collector"]["endpoint"], json=data)
+            res = requests.post(c["output"]["api"]["endpoint"], json=data)
             logging.debug(f"Successfully posting to collector: {res}")
         except Exception as e:
             logging.error(f"Unreachable collector. {e}.")
-        
 
 if __name__ == "__main__":
     # Metrics to get strapped
     start_http_server(8000)
 
-    c = load_config("messages/mygenerator.yaml")
+    c = load_config(Path("messages/mygenerator.yaml"))
 
-    logging.basicConfig(level=c["log_level"])
+    logging.basicConfig(level=c.log_level)
 
     faker_engine(c, stupid_generator)
