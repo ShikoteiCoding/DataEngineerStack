@@ -9,6 +9,8 @@ from prometheus_client import start_http_server
 
 from config import load as load_config
 
+from message import SchemaBuilder
+
 
 def stupid_generator():
     """ Simple generator. No variation, just reproducing """
@@ -34,12 +36,18 @@ def faker_engine(c: dict, generator: Callable):
         except Exception as e:
             logging.error(f"Unreachable collector. {e}.")
 
+class App:
+    def run(self, *, output):
+        ...
+
 if __name__ == "__main__":
     # Metrics to get strapped
     start_http_server(8000)
 
-    c = load_config(Path("configs/mygenerator.yaml"))
+    c = load_config(Path("configs/simple_generator.yaml"))
 
     logging.basicConfig(level=c.log_level)
 
-    faker_engine(c, stupid_generator)
+    # Set message builder from configuration
+
+    m_bldr = SchemaBuilder(c["message"]["schema"])

@@ -1,39 +1,38 @@
 generator:
     interval: 1s
     #threads: 1
-
 message:
-    -
-        name: body
-        json_path: root
-        type: dict
-    -
-        name: message
-        json_path: body
-        type: dict
-    -
-        name: timestamp
-        json_path: body
-        type: datetime
-        func:
-            name: now
-    -
-        name: metric
-        json_path: body.message
-        type: str
-        func:
-            name: const_str
-            params:
-                param1: TELEMETRY_MEASURE
-    -
-        name: value
-        json_path: body.message
-        type: int
-        func:
-            name: const_int
-            params:
-                param1: 15
-
+    schema:
+        -
+            name: body
+            json_path: root
+            type: dict
+        -
+            name: message
+            json_path: body
+            type: dict
+        -
+            name: timestamp
+            json_path: body
+            type: datetime
+            func:
+                name: now
+        -
+            name: metric
+            json_path: body.message
+            type: str
+            func:
+                name: const_str
+                params:
+                    param1: TELEMETRY_MEASURE
+        -
+            name: value
+            json_path: body.message
+            type: int
+            func:
+                name: const_int
+                params:
+                    param1: 15
 output:
     api:
         endpoint: collector:8080
