@@ -38,7 +38,7 @@ if __name__ == "__main__":
     # Metrics to get strapped
     start_http_server(8000)
 
-    c = load_config(Path("messages/mygenerator.yaml"))
+    c = load_config(Path("configs/mygenerator.yaml"))
 
     logging.basicConfig(level=c.log_level)
 

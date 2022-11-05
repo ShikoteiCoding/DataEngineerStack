@@ -1,0 +1,6 @@
+
+class Schema:
+    ...
+
+class Message:
+    ...
