@@ -103,12 +103,10 @@ def test_join_dataframe(spark: SparkSession, transaction_test_df: DataFrame):
     cond = lambda: (F.col("left.transaction_id") == F.col("right.transaction_id"))
 
     joined_df = join_dataframe(
-        transaction_test_df,
-        transaction_test_df,
+        transaction_test_df.alias("left"),
+        transaction_test_df.alias("right"),
         cond,
         join_type="inner",
-        left_alias="left",
-        right_alias="right",
     )
 
     assert set(joined_df.columns) == set(transaction_test_df.columns)

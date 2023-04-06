@@ -32,6 +32,13 @@ def filter_tweet_being_quotes() -> Callable:
     return F.col("is_quote")
 
 
+def join_tweets_by_status() -> Callable:
+    """returns function as condition to join tweet dataframes by status"""
+    return (F.col("quote.reply_to_status_id") == F.col("all.status_id")) & (
+        F.col("quote.created_ts") > F.col("all.created_ts")
+    )
+
+
 if __name__ == "__main__":
     # Import package
     sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
@@ -41,8 +48,8 @@ if __name__ == "__main__":
         read_csv,
         attach_column,
         cast_column,
-        group_dataframe,
         filter_dataframe,
+        join_dataframe,
     )
 
     class TestApp(LoggerProvider):
@@ -84,7 +91,15 @@ if __name__ == "__main__":
             df = attach_column(df, "tweet_number", tweet_number_per_day_per_user)
 
             # filter dataframe
-            df = filter_dataframe(df, filter_tweet_being_quotes)
+            df_quote = filter_dataframe(df, filter_tweet_being_quotes)
+
+            # join dataframe
+            df = join_dataframe(
+                df_quote.alias("quote"),
+                df.alias("df"),
+                join_tweets_by_status,
+                join_type="inner",
+            )
 
             # print schema
             df.printSchema()

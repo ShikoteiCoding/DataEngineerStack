@@ -39,15 +39,7 @@ def group_dataframe(df: DataFrame, columns: Callable, agg_funcs: Callable) -> Da
 
 
 def join_dataframe(
-    left: DataFrame,
-    right: DataFrame,
-    join_cond: Callable,
-    *,
-    join_type: str = "inner",
-    left_alias: str = "",
-    right_alias: str = ""
+    left: DataFrame, right: DataFrame, join_cond: Callable, *, join_type: str = "inner"
 ) -> DataFrame:
-    left = left if not left_alias else left.alias(left_alias)
-    right = right if not right_alias else right.alias(right_alias)
     df = left.join(right, join_cond(), join_type)
     return df
