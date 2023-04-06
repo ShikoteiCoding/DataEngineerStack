@@ -6,7 +6,7 @@ Built upon event-driven architecture. Should be what modern companies use if the
 
 Not tight to any cloud provider, easy to migrate and maintain.
 
-## Stack
+## Global Stack
 
 ### Components
 
@@ -22,6 +22,17 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 
 ### Design
 
+## Batch Jobs
+```
++------------+          +----------+        +----------+
+|            |  csv     | Pyspark  |   SQL  |          | 
+| Data Loader| +------->|   Jobs   | +----> | Postgres |
+|            |          |          |        |          |
++------------+          +----------+        +----------+
+```
+
+## Streaming Jobs
+
 ```
 +------------+           +-----------+           +----------+           +----------+        +----------+
 |            |  JSON     |           |  JSON     |          |  JSON     | Pyspark  |   SQL  |          | 
@@ -30,22 +41,24 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 +------------+           +-----------+           +----------+           +----------+        +----------+
 ```
 
-Some additionnal tools are easy to plug, kafka and pyspark are very versatile.
+## Twitter Batch Jobs
 
-## Build
+Simple usecase to show batch jobs with twitter data
+
+### Build
 
 ```sh
 docker compose build
 ```
 
-## Run Loader Service
+### Run Loader Service
 
 Run download container
 ```sh
 docker compose up -d loader
 ```
 
-## Run Spark Jobs
+### Run Spark Jobs
 
 Run spark container
 ```sh
@@ -57,9 +70,10 @@ Execute a job
 docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_1.py
 ```
 
-## Test
+### Test
 
 WORKDIR is set to /opt/spark
 ```sh
 docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_1.py" -p no:warnings --cov="jobs" -vv
+docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_2.py" -p no:warnings --cov="jobs" -vv
 ```

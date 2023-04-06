@@ -8,3 +8,4 @@
 **/.DS_Store
 **/.pytest_cache
 **/test.py
+**/*_copy.py

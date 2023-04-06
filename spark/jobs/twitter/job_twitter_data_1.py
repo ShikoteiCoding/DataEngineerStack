@@ -1,7 +1,7 @@
 from pyspark.sql import functions as F
 from pyspark.sql.types import TimestampType
 from pyspark.sql.window import Window
-from pyspark.sql import SparkSession, DataFrame
+from pyspark.sql import SparkSession
 
 from typing import Callable
 
@@ -97,12 +97,12 @@ if __name__ == "__main__":
                 multiLine=True,
             )
 
-            # Select
+            # select columns
             df = select_columns(
                 df, ["user_id", "text", "screen_name", "created_at", "source"]
             )
 
-            # Creating columns
+            # creating columns
             df = attach_column(df, "tweet_date", parse_date_from_file_name)
             df = attach_column(df, "hashtags", list_regex_extract_hastags)
             df = cast_column(df, "created_at", TimestampType())
@@ -111,9 +111,10 @@ if __name__ == "__main__":
             )
             df = attach_column(df, "source_count", count_source_name_per_day_user)
 
+            # group dataframe
             df = group_dataframe(df, group_by_fields, agg_fields)
 
-            # Print schema
+            # print schema
             df.printSchema()
             df.show(truncate=False, vertical=True)
 

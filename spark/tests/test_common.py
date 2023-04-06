@@ -59,6 +59,16 @@ def test_cast_column(spark: SparkSession, transaction_test_df: DataFrame):
     assert df_casted.count() == transaction_test_df.count()
     assert df_casted.schema[column_to_cast].dataType == T.StringType()
 
+def test_cast_column_with_alias(spark: SparkSession, transaction_test_df: DataFrame):
+    """test cast column type"""
+    column_to_cast = "transaction_id"
+    df_casted_integer = cast_column(transaction_test_df, column_to_cast, T.IntegerType())
+    df_casted_string = cast_column(df_casted_integer, column_to_cast, T.StringType(), alias="id")
+
+    assert df_casted_string.count() == transaction_test_df.count()
+    assert df_casted_string.schema[column_to_cast].dataType == T.IntegerType()
+    assert df_casted_string.schema["id"].dataType == T.StringType()
+
 
 def test_group_dataframe(spark: SparkSession, people_test_df: DataFrame):
     """test group dataframe by fields"""

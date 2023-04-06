@@ -19,8 +19,12 @@ def attach_column(df: DataFrame, column_name: str, func: Callable):
     return df
 
 
-def cast_column(df: DataFrame, column_name: str, _type: T):
-    df = df.withColumn(column_name, F.col(column_name).cast(_type))
+def cast_column(df: DataFrame, column_name: str, _type: T, *, alias:str=""):
+    df = (
+        df.withColumn(column_name, F.col(column_name).cast(_type))
+        if not alias
+        else df.withColumn(alias, F.col(column_name).cast(_type))
+    )
     return df
 
 
