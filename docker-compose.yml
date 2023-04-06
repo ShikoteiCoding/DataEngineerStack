@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # data loader service
+  loader:
+    container_name: twitter_data_loader
+    image: local/twitter_data_loader
+    build:
+      context: ./loader
+      dockerfile: Dockerfile
+    environment: # Need KAGGLE API Keys for this. Register an account on Kaggle and create a .env file.
+      KAGGLE_USERNAME: "${KAGGLE_USERNAME}"
+      KAGGLE_KEY: "${KAGGLE_KEY}"
+    volumes:
+      - ./loader:/app
+      - ./data:/data
+
+  # spark image. 
+  # use as cluster or image for spark standalone mode
+  # current version in image is spark & hadoop 3.1
+  spark:
+    container_name: pyspark_stack
+    image: local/pyspark_stack
+    build:
+      context: spark/
+    hostname: spark
+    environment:
+      PYSPARK_PYTHON: python3
+    networks:
+      - pyspark_stack_network
+    volumes:
+      - ./spark/jobs:/opt/spark/jobs
+      - ./spark/tests:/opt/spark/tests
+      - ./data:/data
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    command: bash
+  
+
+networks:
+  pyspark_stack_network:

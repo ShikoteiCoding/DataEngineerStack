@@ -31,3 +31,35 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 ```
 
 Some additionnal tools are easy to plug, kafka and pyspark are very versatile.
+
+## Build
+
+```sh
+docker compose build
+```
+
+## Run Loader Service
+
+Run download container
+```sh
+docker compose up -d loader
+```
+
+## Run Spark Jobs
+
+Run spark container
+```sh
+docker compose up -d spark --build
+```
+
+Execute a job
+```sh
+docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_1.py
+```
+
+## Test
+
+WORKDIR is set to /opt/spark
+```sh
+docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_1.py" -p no:warnings --cov="jobs" -vv
+```
