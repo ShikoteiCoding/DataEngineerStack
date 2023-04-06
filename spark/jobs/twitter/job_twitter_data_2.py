@@ -20,15 +20,16 @@ def parse_date_from_file_name() -> Callable:
 def tweet_number_per_day_per_user() -> Callable:
     """returns function to count number of tweet per day per user"""
 
-    w = Window.partitionBy(
-        F.col("reply_date"), F.col("user_id"), F.col("created_at")
-    ).orderBy(F.col("created_ts").asc())
+    w = Window.partitionBy(F.col("reply_date"), F.col("user_id")).orderBy(
+        F.col("created_ts").asc()
+    )
 
     return F.row_number().over(w)
 
 
 def filter_tweet_being_quotes() -> Callable:
     """returns function as condition to filter quote tweets"""
+
     return F.col("is_quote")
 
 
@@ -37,6 +38,15 @@ def join_tweets_by_status() -> Callable:
     return (F.col("quote.reply_to_status_id") == F.col("all.status_id")) & (
         F.col("quote.created_ts") > F.col("all.created_ts")
     )
+
+
+def compute_tweet_delay() -> Callable:
+    """returns function to select timestamp and compute the diff from original tweet"""
+
+    return F.when(
+        F.col("all.created_ts").isNotNull(),
+        F.col("quote.created_ts") - F.col("all.created_ts"),
+    ).alias("reply_delay")
 
 
 if __name__ == "__main__":
@@ -99,6 +109,18 @@ if __name__ == "__main__":
                 df.alias("df"),
                 join_tweets_by_status,
                 join_type="inner",
+            )
+
+            # select dataframe
+            df = select_columns(
+                df,
+                [
+                    F.col("quote.reply_date").alias("reply_date"),
+                    F.col("quote.user_id").alias("reply_user_id"),
+                    F.col("all.user_id").alias("original_user_id"),
+                    compute_tweet_delay(),
+                    F.col("quote.tweet_number").alias("tweet_number"),
+                ],
             )
 
             # print schema

@@ -196,3 +196,17 @@ def tweet_pre_agg_test_df(spark: SparkSession) -> DataFrame:
         ],
     )
     return df
+
+
+@pytest.fixture(scope="session")
+def tweet_quote_test_df(spark: SparkSession) -> DataFrame:
+    df = spark.createDataFrame(
+        data=[
+            (True,),
+            (True,),
+            (False,),
+            (False,),
+        ],
+        schema=["is_quote"],
+    )
+    return df
