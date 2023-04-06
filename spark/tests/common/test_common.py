@@ -12,6 +12,7 @@ from jobs.common import (
     cast_column,
     filter_dataframe,
     group_dataframe,
+    join_dataframe,
 )
 
 
@@ -95,3 +96,20 @@ def test_group_dataframe(spark: SparkSession, people_test_df: DataFrame):
 
     assert grouped_df.count() == 2
     assert set(grouped_df.columns) == set(["gender", "count", "avg_age"])
+
+
+def test_join_dataframe(spark: SparkSession, transaction_test_df: DataFrame):
+    """test filter dataframe"""
+    cond = lambda: (F.col("left.transaction_id") == F.col("right.transaction_id"))
+
+    joined_df = join_dataframe(
+        transaction_test_df,
+        transaction_test_df,
+        cond,
+        join_type="inner",
+        left_alias="left",
+        right_alias="right",
+    )
+
+    assert set(joined_df.columns) == set(transaction_test_df.columns)
+    assert joined_df.count() == 2
