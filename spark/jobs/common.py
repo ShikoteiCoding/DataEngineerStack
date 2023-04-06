@@ -43,3 +43,9 @@ def join_dataframe(
 ) -> DataFrame:
     df = left.join(right, join_cond(), join_type)
     return df
+
+
+def parse_date_from_file_name() -> Callable:
+    """returns function to parse date from file name"""
+
+    return F.regexp_extract(F.input_file_name(), "\\d{4}-\\d{1,2}-\\d{1,2}", 0)

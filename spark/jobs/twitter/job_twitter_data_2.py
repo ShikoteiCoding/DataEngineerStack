@@ -33,7 +33,7 @@ def filter_tweet_being_quotes() -> Callable:
     return F.col("is_quote")
 
 
-def join_tweets_by_status() -> Callable:
+def join_cond_tweets_by_status() -> Callable:
     """returns function as condition to join tweet dataframes by status"""
     return (F.col("quote.reply_to_status_id") == F.col("all.status_id")) & (
         F.col("quote.created_ts") > F.col("all.created_ts")
@@ -80,7 +80,7 @@ if __name__ == "__main__":
                 multiLine=True,
             )
 
-            # Select
+            # select
             df = select_columns(
                 df,
                 [
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 ],
             )
 
-            # creating columns
+            # create columns
             df = cast_column(df, "is_quote", BooleanType())
             df = cast_column(df, "created_ts", TimestampType(), alias="created_at")
             df = attach_column(df, "reply_date", parse_date_from_file_name)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
             df = join_dataframe(
                 df_quote.alias("quote"),
                 df.alias("df"),
-                join_tweets_by_status,
+                join_cond_tweets_by_status,
                 join_type="inner",
             )
 

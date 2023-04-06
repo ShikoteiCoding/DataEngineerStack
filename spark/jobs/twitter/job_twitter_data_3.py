@@ -1,69 +1,117 @@
-import os
-import time
-
-from pyspark.sql.types import TimestampType
+from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-import pyspark.sql.functions as F
 from pyspark.sql import SparkSession
 
-if __name__ == "__main__":
-    print("Compute is starting...")
-    app_name = "ComputeSpark1"
-    spark = SparkSession.builder.appName(app_name).getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
+from pyspark.sql.types import TimestampType, BooleanType
 
-    # Start timer
-    start = time.time()
+from typing import Callable
 
-    # Read Dataset
-    print("Reading dataset")
-    # Demo read.
-    url = "/data"
-    df = spark.read.csv(
-        url, header=True, sep=",", quote='"', escape='"', multiLine=True
-    )
+import sys
+import os
 
-    # Partition
+
+# TODO: Access logger from those functions.
+def tweet_rank_per_day_per_user() -> Callable:
+    """compute rank of tweet per day per user"""
+
     w = Window.partitionBy(F.col("tweet_date"), F.col("user_id")).orderBy(
         F.col("created_ts").asc()
     )
 
-    base_df = (
-        df.select(
-            F.col("user_id"),
-            F.col("screen_name"),
-            F.col("created_at"),
-        )
-        .withColumn(
-            "tweet_date",
-            F.regexp_extract(F.input_file_name(), "\\d{4}-\\d{1,2}-\\d{1,2}", 0),
-        )
-        .withColumn("created_ts", F.col("created_at").cast(TimestampType()))
-        .withColumn("rank_name", F.rank().over(w))
-    )
+    return F.rank().over(w)
 
-    cond = [
+
+def join_cond_screen_name_over_the_day() -> Callable:
+    """returns function as condition ot join tweets screen name by user"""
+
+    return (
         (F.col("left.user_id") == F.col("right.user_id"))
         & (F.col("left.tweet_date") == F.col("right.tweet_date"))
         & (F.col("left.screen_name") != F.col("right.screen_name"))
-        & (F.col("left.rank_name") == F.col("right.rank_name") - 1)
-    ]
-
-    df = (
-        base_df.alias("left")
-        .join(base_df.alias("right"), cond, "inner")
-        .select(
-            F.col("left.user_id").alias("user_id"),
-            F.col("left.screen_name").alias("old_screen_name"),
-            F.col("right.screen_name").alias("new_screen_name"),
-            F.col("right.tweet_date").alias("change_date"),
-        )
+        & (F.col("left.rank_screen_name") == F.col("right.rank_screen_name") - 1)
     )
 
-    # Debug
-    df.printSchema()
-    df.show(truncate=False, vertical=True)
 
-    # End timer
-    end = time.time()
-    print(end - start)  # Should go to monitoring endpoints
+if __name__ == "__main__":
+    # Import package
+    sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
+    from jobs.spark_logger import LoggerProvider
+    from jobs.common import (
+        select_columns,
+        read_csv,
+        attach_column,
+        cast_column,
+        filter_dataframe,
+        join_dataframe,
+        parse_date_from_file_name,
+    )
+
+    class TestApp(LoggerProvider):
+        def __init__(self, app_name: str):
+            self.spark = SparkSession.builder.appName(app_name or None).getOrCreate()
+            self.logger = self.get_logger(self.spark)
+
+        def run(self):
+            # read the file
+            self.logger.info("Reading the file")
+            df = read_csv(
+                self.spark,
+                "/data",
+                header=True,
+                sep=",",
+                quote='"',
+                escape='"',
+                multiLine=True,
+            )
+
+            # select columns
+            df = select_columns(
+                df,
+                [
+                    "user_id",
+                    "screen_name",
+                    "created_at",
+                ],
+            )
+
+            # create columns
+            df = attach_column(df, "tweet_date", parse_date_from_file_name)
+            df = cast_column(df, "created_at", TimestampType(), alias="created_ts")
+            df = attach_column(df, "rank_screen_name", tweet_rank_per_day_per_user)
+
+            # join dataframe
+            df = join_dataframe(
+                df.alias("left"),
+                df.alias("right"),
+                join_cond_screen_name_over_the_day,
+                join_type="inner",
+            )
+
+            # select dataframe
+            df = select_columns(
+                df,
+                [
+                    F.col("left.user_id").alias("user_id"),
+                    F.col("left.screen_name").alias("old_screen_name"),
+                    F.col("right.screen_name").alias("new_screen_name"),
+                    F.col("right.tweet_date").alias("change_date"),
+                ],
+            )
+
+            # print schema
+            df.printSchema()
+            df.show(truncate=False, vertical=True)
+
+        def launch(self):
+            self.logger.info("Launching the application")
+
+        def stop(self):
+            self.spark.stop()
+
+    app = TestApp(app_name="test_app")
+
+    app.launch()
+
+    app.run()
+
+    app.stop()
