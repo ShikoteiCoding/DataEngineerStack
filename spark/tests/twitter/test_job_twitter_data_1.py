@@ -6,71 +6,13 @@ import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
 from jobs.twitter.job_twitter_data_1 import (
-    parse_date_from_file_name,
     list_regex_extract_hastags,
     last_screen_name_per_day_per_user,
     count_source_name_per_day_user,
     group_by_fields,
     agg_fields,
 )
-from jobs.common import read_csv, attach_column, group_dataframe
-
-
-def test_parse_date_from_file_name(spark: SparkSession, transaction_test_df: DataFrame):
-    """test read of csv date filename to extract"""
-    date = "2022-01-01"
-    url = f"/tmp/file_{date}.csv"
-
-    # write dataframe with specific filename
-    transaction_test_df.write.mode("overwrite").csv(url, header=True)
-
-    # read the temporary stored DataFrame
-    df = read_csv(spark, url, header=True, inferSchema=True)
-
-    # apply function
-    output = (
-        attach_column(df, "input_file_date", parse_date_from_file_name)
-        .select("input_file_date")
-        .collect()
-    )
-
-    expected_output = [
-        (date,),
-        (date,),
-    ]
-
-    assert (
-        output == spark.createDataFrame(expected_output, ["input_file_date"]).collect()
-    )
-
-
-def test_parse_date_from_file_name_without_date(
-    spark: SparkSession, transaction_test_df: DataFrame
-):
-    """test read of csv without date filename to extract"""
-    url = "/tmp/file.csv"
-
-    # write dataframe with specific filename
-    transaction_test_df.write.mode("overwrite").csv(url, header=True)
-
-    # read the temporary stored DataFrame
-    df = read_csv(spark, url, header=True, inferSchema=True)
-
-    # apply the function to the DataFrame
-    output = (
-        attach_column(df, "input_file_date", parse_date_from_file_name)
-        .select("input_file_date")
-        .collect()
-    )
-
-    expected_output = [
-        ("",),
-        ("",),
-    ]
-
-    assert (
-        output == spark.createDataFrame(expected_output, ["input_file_date"]).collect()
-    )
+from jobs.common import attach_column, group_dataframe
 
 
 def test_list_regex_extract_hastags(spark: SparkSession, tweet_test_df: DataFrame):

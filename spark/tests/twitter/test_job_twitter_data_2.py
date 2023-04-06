@@ -6,11 +6,15 @@ import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
 from jobs.twitter.job_twitter_data_2 import (
-    parse_date_from_file_name,
     tweet_number_per_day_per_user,
     filter_tweet_being_quotes,
 )
-from jobs.common import read_csv, attach_column, filter_dataframe, join_dataframe
+from jobs.common import (
+    read_csv,
+    attach_column,
+    filter_dataframe,
+    parse_date_from_file_name,
+)
 
 
 def test_parse_date_from_file_name(

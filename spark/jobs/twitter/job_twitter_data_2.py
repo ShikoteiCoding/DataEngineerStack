@@ -11,12 +11,6 @@ import os
 
 
 # TODO: Access logger from those functions.
-def parse_date_from_file_name() -> Callable:
-    """returns function to parse date from file name"""
-
-    return F.regexp_extract(F.input_file_name(), "\\d{4}-\\d{1,2}-\\d{1,2}", 0)
-
-
 def tweet_number_per_day_per_user() -> Callable:
     """returns function to count number of tweet per day per user"""
 
@@ -60,6 +54,7 @@ if __name__ == "__main__":
         cast_column,
         filter_dataframe,
         join_dataframe,
+        parse_date_from_file_name,
     )
 
     class TestApp(LoggerProvider):
