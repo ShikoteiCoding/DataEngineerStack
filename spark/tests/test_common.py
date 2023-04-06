@@ -10,6 +10,7 @@ from jobs.common import (
     select_columns,
     attach_column,
     cast_column,
+    filter_dataframe,
     group_dataframe,
 )
 
@@ -59,15 +60,28 @@ def test_cast_column(spark: SparkSession, transaction_test_df: DataFrame):
     assert df_casted.count() == transaction_test_df.count()
     assert df_casted.schema[column_to_cast].dataType == T.StringType()
 
+
 def test_cast_column_with_alias(spark: SparkSession, transaction_test_df: DataFrame):
-    """test cast column type"""
+    """test cast column type when target column name (alias)"""
     column_to_cast = "transaction_id"
-    df_casted_integer = cast_column(transaction_test_df, column_to_cast, T.IntegerType())
-    df_casted_string = cast_column(df_casted_integer, column_to_cast, T.StringType(), alias="id")
+    df_casted_integer = cast_column(
+        transaction_test_df, column_to_cast, T.IntegerType()
+    )
+    df_casted_string = cast_column(
+        df_casted_integer, column_to_cast, T.StringType(), alias="id"
+    )
 
     assert df_casted_string.count() == transaction_test_df.count()
     assert df_casted_string.schema[column_to_cast].dataType == T.IntegerType()
     assert df_casted_string.schema["id"].dataType == T.StringType()
+
+
+def test_filter_dataframe(spark: SparkSession, transaction_test_df: DataFrame):
+    """test filter dataframe"""
+    id_cond = lambda: (F.col("transaction_id") == 1)
+    filtered_df = filter_dataframe(transaction_test_df, id_cond)
+
+    assert filtered_df.count() == 1
 
 
 def test_group_dataframe(spark: SparkSession, people_test_df: DataFrame):

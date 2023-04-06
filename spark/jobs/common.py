@@ -19,12 +19,17 @@ def attach_column(df: DataFrame, column_name: str, func: Callable):
     return df
 
 
-def cast_column(df: DataFrame, column_name: str, _type: T, *, alias:str=""):
+def cast_column(df: DataFrame, column_name: str, _type: T, *, alias: str = ""):
     df = (
         df.withColumn(column_name, F.col(column_name).cast(_type))
         if not alias
         else df.withColumn(alias, F.col(column_name).cast(_type))
     )
+    return df
+
+
+def filter_dataframe(df: DataFrame, cond: Callable):
+    df = df.filter(cond())
     return df
 
 

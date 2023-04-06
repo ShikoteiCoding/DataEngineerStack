@@ -24,6 +24,13 @@ def tweet_number_per_day_per_user() -> Callable:
         F.col("reply_date"), F.col("user_id"), F.col("created_at")
     ).orderBy(F.col("created_ts").asc())
 
+    return F.row_number().over(w)
+
+
+def filter_tweet_being_quotes() -> Callable:
+    """returns function as condition to filter quote tweets"""
+    return F.col("is_quote")
+
 
 if __name__ == "__main__":
     # Import package
@@ -35,6 +42,7 @@ if __name__ == "__main__":
         attach_column,
         cast_column,
         group_dataframe,
+        filter_dataframe,
     )
 
     class TestApp(LoggerProvider):
@@ -69,16 +77,16 @@ if __name__ == "__main__":
                 ],
             )
 
-            # Creating Columns
+            # creating columns
             df = cast_column(df, "is_quote", BooleanType())
             df = cast_column(df, "created_ts", TimestampType(), alias="created_at")
             df = attach_column(df, "reply_date", parse_date_from_file_name)
-            df = attach_column(
-                df,
-                "tweet_number",
-            )
+            df = attach_column(df, "tweet_number", tweet_number_per_day_per_user)
 
-            # Print schema
+            # filter dataframe
+            df = filter_dataframe(df, filter_tweet_being_quotes)
+
+            # print schema
             df.printSchema()
             df.show(truncate=False, vertical=True)
 
