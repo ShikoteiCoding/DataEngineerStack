@@ -29,8 +29,8 @@ def filter_tweet_being_quotes() -> Callable:
 
 def join_cond_tweets_by_status() -> Callable:
     """returns function as condition to join tweet dataframes by status"""
-    return (F.col("quote.reply_to_status_id") == F.col("all.status_id")) & (
-        F.col("quote.created_ts") > F.col("all.created_ts")
+    return (F.col("quote.reply_to_status_id") == F.col("df.status_id")) & (
+        F.col("quote.created_ts") > F.col("df.created_ts")
     )
 
 
@@ -38,8 +38,8 @@ def compute_tweet_delay() -> Callable:
     """returns function to select timestamp and compute the diff from original tweet"""
 
     return F.when(
-        F.col("all.created_ts").isNotNull(),
-        F.col("quote.created_ts") - F.col("all.created_ts"),
+        F.col("df.created_ts").isNotNull(),
+        F.col("quote.created_ts") - F.col("df.created_ts"),
     ).alias("reply_delay")
 
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
                 [
                     F.col("quote.reply_date").alias("reply_date"),
                     F.col("quote.user_id").alias("reply_user_id"),
-                    F.col("all.user_id").alias("original_user_id"),
+                    F.col("df.user_id").alias("original_user_id"),
                     compute_tweet_delay(),
                     F.col("quote.tweet_number").alias("tweet_number"),
                 ],
