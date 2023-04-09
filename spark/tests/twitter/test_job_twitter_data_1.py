@@ -79,7 +79,7 @@ def test_count_source_name_per_user(spark: SparkSession, tweet_test_df: DataFram
         attach_column(
             tweet_test_df, "source_name_count", count_source_name_per_day_user
         )
-        .sort(F.col("user_id"), F.col("created_at").asc())
+        .sort(F.col("user_id"), F.col("created_ts").asc())
         .select(columns)
         .collect()
     )

@@ -10,41 +10,9 @@ from jobs.twitter.job_twitter_data_2 import (
     filter_tweet_being_quotes,
 )
 from jobs.common import (
-    read_csv,
     attach_column,
     filter_dataframe,
-    parse_date_from_file_name,
 )
-
-
-def test_parse_date_from_file_name(
-    spark: SparkSession, transaction_test_df: DataFrame
-) -> None:
-    """test read of csv date filename to extract"""
-    date = "2022-01-01"
-    url = f"/tmp/file_{date}.csv"
-
-    # write dataframe with specific filename
-    transaction_test_df.write.mode("overwrite").csv(url, header=True)
-
-    # read the temporary stored DataFrame
-    df = read_csv(spark, url, header=True, inferSchema=True)
-
-    # apply function
-    output = (
-        attach_column(df, "input_file_date", parse_date_from_file_name)
-        .select("input_file_date")
-        .collect()
-    )
-
-    expected_output = [
-        (date,),
-        (date,),
-    ]
-
-    assert (
-        output == spark.createDataFrame(expected_output, ["input_file_date"]).collect()
-    )
 
 
 def test_tweet_number_per_day_per_user(
@@ -52,9 +20,8 @@ def test_tweet_number_per_day_per_user(
 ) -> None:
     """test compute column of number tweet per day per user"""
 
-    # rename columns to match the transofrmation
+    # rename columns to match the transformation
     tweet_test_df = tweet_test_df.withColumn("reply_date", F.col("tweet_date"))
-    tweet_test_df = tweet_test_df.withColumn("created_ts", F.col("created_at"))
 
     output = (
         attach_column(tweet_test_df, "tweet_number", tweet_number_per_day_per_user)

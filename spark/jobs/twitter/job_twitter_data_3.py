@@ -10,7 +10,7 @@ import sys
 import os
 
 
-# TODO: Access logger from those functions.
+# TODO: access logger from those functions.
 def tweet_rank_per_day_per_user() -> Callable:
     """compute rank of tweet per day per user"""
 
@@ -33,7 +33,7 @@ def join_cond_screen_name_over_the_day() -> Callable:
 
 
 if __name__ == "__main__":
-    # Import package
+    # import package
     sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
     from jobs.spark_logger import LoggerProvider
     from jobs.common import (
@@ -41,7 +41,6 @@ if __name__ == "__main__":
         read_csv,
         attach_column,
         cast_column,
-        filter_dataframe,
         join_dataframe,
         parse_date_from_file_name,
     )

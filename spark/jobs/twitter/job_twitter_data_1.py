@@ -20,7 +20,7 @@ def last_screen_name_per_day_per_user() -> Callable:
     """returns function to create list of screen name ordered by tweet date"""
 
     w = Window.partitionBy(F.col("tweet_date"), F.col("user_id")).orderBy(
-        F.col("created_at").desc()
+        F.col("created_ts").desc()
     )
 
     return F.collect_list(F.col("screen_name")).over(w).getItem(0)
@@ -100,7 +100,7 @@ if __name__ == "__main__":
             # creating columns
             df = attach_column(df, "tweet_date", parse_date_from_file_name)
             df = attach_column(df, "hashtags", list_regex_extract_hastags)
-            df = cast_column(df, "created_at", TimestampType())
+            df = cast_column(df, "created_at", TimestampType(), alias="created_ts")
             df = attach_column(
                 df, "last_screen_name", last_screen_name_per_day_per_user
             )

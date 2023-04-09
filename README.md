@@ -68,6 +68,8 @@ docker compose up -d spark --build
 Execute a job
 ```sh
 docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_1.py
+docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_2.py
+docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_3.py
 ```
 
 ### Test
@@ -76,4 +78,5 @@ WORKDIR is set to /opt/spark
 ```sh
 docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_1.py" -p no:warnings --cov="jobs" -vv
 docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_2.py" -p no:warnings --cov="jobs" -vv
+docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_3.py" -p no:warnings --cov="jobs" -vv
 ```

@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
             # create columns
             df = cast_column(df, "is_quote", BooleanType())
-            df = cast_column(df, "created_ts", TimestampType(), alias="created_at")
+            df = cast_column(df, "created_at", TimestampType(), alias="created_ts")
             df = attach_column(df, "reply_date", parse_date_from_file_name)
             df = attach_column(df, "tweet_number", tweet_number_per_day_per_user)
 
