@@ -3,11 +3,20 @@ import pyspark.sql.types as T
 
 from pyspark.sql import DataFrame, SparkSession
 
-from typing import Callable
+from typing import Callable, NoReturn
 
 
 def read_csv(spark: SparkSession, url: str, **kwargs) -> DataFrame:
+    """spark read csv from url."""
     return spark.read.csv(url, **kwargs)
+
+def write_to_database(df: DataFrame, url: str, table_name: str, **kwargs) -> NoReturn:
+    """spark write dataframe to database"""
+    (   df.write()
+        .format()
+        .option()
+    )
+
 
 
 def select_columns(df: DataFrame, columns=list[str]) -> DataFrame:
@@ -49,3 +58,5 @@ def parse_date_from_file_name() -> Callable:
     """returns function to parse date from file name"""
 
     return F.regexp_extract(F.input_file_name(), "\\d{4}-\\d{1,2}-\\d{1,2}", 0)
+
+

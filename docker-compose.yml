@@ -36,7 +36,24 @@ services:
     stdin_open: true
     restart: unless-stopped
     command: bash
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - pyspark_stack_network
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
   
 
 networks:
   pyspark_stack_network:
+
+volumes:
+  db:
+    driver: local
