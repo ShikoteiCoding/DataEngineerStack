@@ -1,7 +1,7 @@
 from pyspark.sql import functions as F
 from pyspark.sql.types import TimestampType
 from pyspark.sql.window import Window
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, Column
 
 from typing import Callable
 
@@ -10,13 +10,13 @@ import os
 
 
 # TODO: Access logger from those functions.
-def list_regex_extract_hastags() -> Callable:
+def list_regex_extract_hastags() -> Column:
     """returns function to extract hashtags from text"""
 
     return F.expr(r"regexp_extract_all(text, '(#\\w+)', 1)")
 
 
-def last_screen_name_per_day_per_user() -> Callable:
+def last_screen_name_per_day_per_user() -> Column:
     """returns function to create list of screen name ordered by tweet date"""
 
     w = Window.partitionBy(F.col("tweet_date"), F.col("user_id")).orderBy(
@@ -26,7 +26,7 @@ def last_screen_name_per_day_per_user() -> Callable:
     return F.collect_list(F.col("screen_name")).over(w).getItem(0)
 
 
-def count_source_name_per_day_user() -> Callable:
+def count_source_name_per_day_user() -> Column:
     """returns function to create list of screen name ordered by tweet date"""
 
     w = Window.partitionBy(F.col("tweet_date"), F.col("user_id"), F.col("source"))
@@ -34,7 +34,7 @@ def count_source_name_per_day_user() -> Callable:
     return F.count(F.col("source")).over(w)
 
 
-def group_by_fields() -> list[Callable]:
+def group_by_fields() -> list[Column]:
     """returns list of columns for group by"""
 
     return [
@@ -44,7 +44,7 @@ def group_by_fields() -> list[Callable]:
     ]
 
 
-def agg_fields() -> list[Callable]:
+def agg_fields() -> list[Column]:
     """returns list of columns for aggregate functions"""
 
     return [
