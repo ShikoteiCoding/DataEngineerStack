@@ -9,4 +9,4 @@
 **/.pytest_cache
 **/test.py
 **/*_copy.py
-/logs/
+**/logs/
