@@ -1,6 +1,6 @@
 /venv/
 **/__pycache__/
-/venv/
+**/venv/
 /data-full/
 /data/
 .env
