@@ -8,6 +8,8 @@ Not tight to any cloud provider, easy to migrate and maintain.
 
 ## Global Stack
 
+For now the stack is local docker containers. K8S is in the roadmap.
+
 ### Components
 
 ```
@@ -74,6 +76,14 @@ docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_3.py
 
 ### Test
 
+#### Test commons
+
+Common part is a library helping the code architecture of actual jobs.
+```sh
+docker compose exec spark python3 -m pytest "tests/commons/test_commons.py" -p no:warnings --cov="jobs" -vv
+```
+
+#### Test actual job functions
 WORKDIR is set to /opt/spark
 ```sh
 docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_1.py" -p no:warnings --cov="jobs" -vv
