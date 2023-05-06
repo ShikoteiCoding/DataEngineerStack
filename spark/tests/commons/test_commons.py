@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
-from jobs.common import (
+from commons.commons import (
     read_csv,
     select_columns,
     attach_column,
@@ -88,8 +88,8 @@ def test_filter_dataframe(spark: SparkSession, transaction_test_df: DataFrame):
 
 def test_group_dataframe(spark: SparkSession, people_test_df: DataFrame):
     """test group dataframe by fields"""
-    gender = lambda: ["gender"]
-    count_and_age_mean = lambda: [
+    gender = [F.col("gender")]
+    count_and_age_mean = [
         F.count("name").alias("count"),
         F.avg("age").alias("avg_age"),
     ]

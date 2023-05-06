@@ -5,12 +5,13 @@ findspark.init()
 import pytest
 
 from pyspark.sql import SparkSession, DataFrame
+from typing import Generator
 
 
 @pytest.fixture(scope="session")
-def spark() -> SparkSession:
+def spark() -> Generator[SparkSession, None, None]:
     spark = (
-        SparkSession.builder.master("local[1]")
+        SparkSession.builder.master("local[1]")  # type: ignore
         .appName("local-tests")
         .config("spark.executor.cores", "1")
         .config("spark.executor.instances", "1")

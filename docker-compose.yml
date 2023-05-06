@@ -28,7 +28,8 @@ services:
       PYSPARK_PYTHON: python3
     networks:
       - pyspark_stack_network
-    volumes:
+    volumes:  # specify folder to avoid container pollution
+      - ./spark/commons:/opt/spark/commons
       - ./spark/jobs:/opt/spark/jobs
       - ./spark/tests:/opt/spark/tests
       - ./data:/data

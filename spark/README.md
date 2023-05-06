@@ -1,0 +1,1 @@
+python version is 3.9 for pyspark in the currently used docker image.

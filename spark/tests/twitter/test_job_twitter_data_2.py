@@ -9,7 +9,7 @@ from jobs.twitter.job_twitter_data_2 import (
     tweet_number_per_day_per_user,
     filter_tweet_being_quotes,
 )
-from jobs.common import (
+from commons.commons import (
     attach_column,
     filter_dataframe,
 )

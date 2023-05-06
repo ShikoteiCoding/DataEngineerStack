@@ -1,17 +1,15 @@
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, Column
 
 from pyspark.sql.types import TimestampType, BooleanType
-
-from typing import Callable
 
 import sys
 import os
 
 
 # TODO: Access logger from those functions.
-def tweet_number_per_day_per_user() -> Callable:
+def tweet_number_per_day_per_user() -> Column:
     """returns function to count number of tweet per day per user"""
 
     w = Window.partitionBy(F.col("reply_date"), F.col("user_id")).orderBy(
@@ -21,20 +19,20 @@ def tweet_number_per_day_per_user() -> Callable:
     return F.row_number().over(w)
 
 
-def filter_tweet_being_quotes() -> Callable:
+def filter_tweet_being_quotes() -> Column:
     """returns function as condition to filter quote tweets"""
 
     return F.col("is_quote")
 
 
-def join_cond_tweets_by_status() -> Callable:
+def join_cond_tweets_by_status() -> Column:
     """returns function as condition to join tweet dataframes by status"""
     return (F.col("quote.reply_to_status_id") == F.col("df.status_id")) & (
         F.col("quote.created_ts") > F.col("df.created_ts")
     )
 
 
-def compute_tweet_delay() -> Callable:
+def compute_tweet_delay() -> Column:
     """returns function to select timestamp and compute the diff from original tweet"""
 
     return F.when(
@@ -46,8 +44,8 @@ def compute_tweet_delay() -> Callable:
 if __name__ == "__main__":
     # Import package
     sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
-    from jobs.spark_logger import LoggerProvider
-    from jobs.common import (
+    from commons.logger import LoggerProvider
+    from commons.commons import (
         select_columns,
         read_csv,
         attach_column,
@@ -59,7 +57,7 @@ if __name__ == "__main__":
 
     class TestApp(LoggerProvider):
         def __init__(self, app_name: str):
-            self.spark = SparkSession.builder.appName(app_name or None).getOrCreate()
+            self.spark = SparkSession.builder.appName(app_name).getOrCreate()
             self.logger = self.get_logger(self.spark)
 
         def run(self):

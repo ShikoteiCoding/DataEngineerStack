@@ -9,7 +9,7 @@ from jobs.twitter.job_twitter_data_3 import (
     tweet_rank_per_day_per_user,
     join_cond_screen_name_over_the_day,
 )
-from jobs.common import cast_column, attach_column, join_dataframe
+from commons.commons import cast_column, attach_column, join_dataframe
 
 
 def test_tweet_rank_per_day_per_user(

@@ -3,8 +3,6 @@ from pyspark.sql.types import TimestampType
 from pyspark.sql.window import Window
 from pyspark.sql import SparkSession, Column
 
-from typing import Callable
-
 import sys
 import os
 
@@ -64,8 +62,8 @@ def agg_fields() -> list[Column]:
 if __name__ == "__main__":
     # Import package
     sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
-    from jobs.spark_logger import LoggerProvider
-    from jobs.common import (
+    from commons.logger import LoggerProvider
+    from commons.commons import (
         select_columns,
         read_csv,
         attach_column,
@@ -76,7 +74,7 @@ if __name__ == "__main__":
 
     class TestApp(LoggerProvider):
         def __init__(self, app_name: str):
-            self.spark = SparkSession.builder.appName(app_name or None).getOrCreate()
+            self.spark = SparkSession.builder.appName(app_name).getOrCreate()
             self.logger = self.get_logger(self.spark)
 
         def run(self):
@@ -107,7 +105,7 @@ if __name__ == "__main__":
             df = attach_column(df, "source_count", count_source_name_per_day_user)
 
             # group dataframe
-            df = group_dataframe(df, group_by_fields, agg_fields)
+            df = group_dataframe(df, group_by_fields(), agg_fields())
 
             # print schema
             df.printSchema()

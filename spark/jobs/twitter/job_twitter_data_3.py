@@ -1,17 +1,15 @@
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, Column
 
-from pyspark.sql.types import TimestampType, BooleanType
-
-from typing import Callable
+from pyspark.sql.types import TimestampType
 
 import sys
 import os
 
 
 # TODO: access logger from those functions.
-def tweet_rank_per_day_per_user() -> Callable:
+def tweet_rank_per_day_per_user() -> Column:
     """compute rank of tweet per day per user"""
 
     w = Window.partitionBy(F.col("tweet_date"), F.col("user_id")).orderBy(
@@ -21,7 +19,7 @@ def tweet_rank_per_day_per_user() -> Callable:
     return F.rank().over(w)
 
 
-def join_cond_screen_name_over_the_day() -> Callable:
+def join_cond_screen_name_over_the_day() -> Column:
     """returns function as condition ot join tweets screen name by user"""
 
     return (
@@ -35,8 +33,8 @@ def join_cond_screen_name_over_the_day() -> Callable:
 if __name__ == "__main__":
     # import package
     sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
-    from jobs.spark_logger import LoggerProvider
-    from jobs.common import (
+    from commons.logger import LoggerProvider
+    from commons.commons import (
         select_columns,
         read_csv,
         attach_column,
@@ -47,7 +45,7 @@ if __name__ == "__main__":
 
     class TestApp(LoggerProvider):
         def __init__(self, app_name: str):
-            self.spark = SparkSession.builder.appName(app_name or None).getOrCreate()
+            self.spark = SparkSession.builder.appName(app_name).getOrCreate()
             self.logger = self.get_logger(self.spark)
 
         def run(self):

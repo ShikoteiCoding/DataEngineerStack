@@ -12,7 +12,7 @@ from jobs.twitter.job_twitter_data_1 import (
     group_by_fields,
     agg_fields,
 )
-from jobs.common import attach_column, group_dataframe
+from commons.commons import attach_column, group_dataframe
 
 
 def test_list_regex_extract_hastags(spark: SparkSession, tweet_test_df: DataFrame):
@@ -114,7 +114,7 @@ def test_group_and_agg(spark: SparkSession, tweet_pre_agg_test_df: DataFrame):
     # apply the group_fields function to the DataFrame
     # force deternimistic ordering - testing only
     output = (
-        group_dataframe(tweet_pre_agg_test_df, group_by_fields, agg_fields)
+        group_dataframe(tweet_pre_agg_test_df, group_by_fields(), agg_fields())
         .sort(F.col("user_id"), F.col("tweet_date").asc())
         .select(columns)
         .select(F.array_sort("hashtags").alias("hashtags"))
