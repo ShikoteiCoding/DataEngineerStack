@@ -3,7 +3,13 @@ Test commons
 """
 from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
-import pyspark.sql.types as T
+from pyspark.sql.types import (
+    IntegerType,
+    StringType,
+    StructField,
+    StructType,
+    TimestampType,
+)
 
 from commons.spark_helpers import (
     read_csv,
@@ -14,6 +20,7 @@ from commons.spark_helpers import (
     group_dataframe,
     join_dataframe,
     parse_date_from_file_name,
+    remove_atomic_type
 )
 
 
@@ -54,11 +61,11 @@ class TestBasicOperations:
     def test_cast_column(self, spark: SparkSession, transaction_test_df: DataFrame):
         """test cast column type"""
         column_to_cast = "transaction_id"
-        new_type = T.StringType()
+        new_type = StringType()
         df_casted = cast_column(transaction_test_df, column_to_cast, new_type)
 
         assert df_casted.count() == transaction_test_df.count()
-        assert df_casted.schema[column_to_cast].dataType == T.StringType()
+        assert df_casted.schema[column_to_cast].dataType == StringType()
 
     def test_cast_column_with_alias(
         self, spark: SparkSession, transaction_test_df: DataFrame
@@ -66,15 +73,15 @@ class TestBasicOperations:
         """test cast column type when target column name (alias)"""
         column_to_cast = "transaction_id"
         df_casted_integer = cast_column(
-            transaction_test_df, column_to_cast, T.IntegerType()
+            transaction_test_df, column_to_cast, IntegerType()
         )
         df_casted_string = cast_column(
-            df_casted_integer, column_to_cast, T.StringType(), alias="id"
+            df_casted_integer, column_to_cast, StringType(), alias="id"
         )
 
         assert df_casted_string.count() == transaction_test_df.count()
-        assert df_casted_string.schema[column_to_cast].dataType == T.IntegerType()
-        assert df_casted_string.schema["id"].dataType == T.StringType()
+        assert df_casted_string.schema[column_to_cast].dataType == IntegerType()
+        assert df_casted_string.schema["id"].dataType == StringType()
 
     def test_filter_dataframe(
         self, spark: SparkSession, transaction_test_df: DataFrame
@@ -172,4 +179,40 @@ class TestBasicOperations:
 
 
 class TestRemoveDataTypeFromDF:
-    ...
+    
+    def test_remove_atomic_type_non_nested(self, spark:SparkSession):
+        schema = StructType([
+            StructField("int", IntegerType(), True),
+            StructField("str", StringType(), True)
+        ])
+        data = [
+            (1, "")
+        ]
+
+        df = spark.createDataFrame(data, schema)
+
+        output = remove_atomic_type(df, StringType)
+
+        expected = df.drop(f"str")
+
+        assert output.collect() == expected.collect()
+    
+    def test_remove_atomic_type_struct_shallow_nesting(self, spark:SparkSession):
+        schema = StructType([
+            StructField("1_str", StringType(), True),
+            StructField("struct", StructType([
+                StructField("1_1_str", StringType(), True),
+                StructField("1_1_int", IntegerType(), True),
+            ]), True)
+        ])
+        data = [
+            ("", ("", 1))
+        ]
+
+        df = spark.createDataFrame(data, schema)
+
+        output = remove_atomic_type(df, IntegerType)
+
+        expected = df.withColumn("struct", F.col("struct").dropFields("1_1_int"))
+
+        assert output.collect() == expected.collect()

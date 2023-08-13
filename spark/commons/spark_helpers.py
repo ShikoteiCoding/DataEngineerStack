@@ -1,14 +1,15 @@
 import pyspark.sql.functions as F
 
-from pyspark.sql.types import DataType
+from pyspark.sql.types import DataType, StructType
 from pyspark.sql import DataFrame, SparkSession, Column
 
-from typing import Callable, Union
+from typing import Callable, Union, Type
 
 
 ########################################################
 ################### Basic operations ###################
 ########################################################
+
 
 def read_csv(spark: SparkSession, url: str, **kwargs) -> DataFrame:
     """spark read csv from url."""
@@ -65,5 +66,37 @@ def parse_date_from_file_name() -> Column:
 ########################################################
 ################## DataFrame handling ##################
 ########################################################
-def remove_atomic_type(df: DataFrame, type_to_remove: DataType) -> DataFrame:
-    ...
+
+
+def remove_atomic_type(df: DataFrame, type_to_remove: Type[DataType]) -> DataFrame:
+    """ """
+
+    def _recursive_remove_for_field(
+        field_type: DataType, field_name: str, is_field_of_struct: bool = False, path: str = ""
+    ) -> Union[Column, None]:
+        if isinstance(field_type, type_to_remove):
+            if is_field_of_struct and not path:
+                return None
+            if is_field_of_struct and path:
+                return F.col(path + "." + field_name)
+            
+        if isinstance(field_type, StructType):
+            
+            modified_subfields = [
+                _recursive_remove_for_field(subfield.dataType, subfield.name, is_field_of_struct=True, path=field_name) for subfield in field_type.fields
+            ]
+            filtered_subfields = [subfield for subfield in modified_subfields if subfield is not None]
+
+            ... #to handle
+
+        if not path:
+            return F.col(field_name)
+        return None
+
+    modified_fields = [
+        _recursive_remove_for_field(field.dataType, field.name, is_field_of_struct=True)
+        for field in df.schema.fields
+    ]
+
+    filtered_fields = [field for field in modified_fields if field is not None]
+    return df.select(*filtered_fields)
