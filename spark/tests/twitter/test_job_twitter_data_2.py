@@ -5,11 +5,11 @@ from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
-from jobs.twitter.job_twitter_data_2 import (
+from spark_etls.twitter_jobs.job_twitter_data_2 import (
     tweet_number_per_day_per_user,
     filter_tweet_being_quotes,
 )
-from commons.commons import (
+from commons.spark_helpers import (
     attach_column,
     filter_dataframe,
 )

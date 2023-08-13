@@ -5,14 +5,14 @@ from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
 import pyspark.sql.types as T
 
-from jobs.twitter.job_twitter_data_1 import (
+from spark_etls.twitter_jobs.job_twitter_data_1 import (
     list_regex_extract_hastags,
     last_screen_name_per_day_per_user,
     count_source_name_per_day_user,
     group_by_fields,
     agg_fields,
 )
-from commons.commons import attach_column, group_dataframe
+from commons.spark_helpers import attach_column, group_dataframe
 
 
 def test_list_regex_extract_hastags(spark: SparkSession, tweet_test_df: DataFrame):

@@ -5,17 +5,14 @@ from pyspark.sql import DataFrame, SparkSession, Column
 
 from typing import Callable, Union
 
+
+########################################################
+################### Basic operations ###################
+########################################################
+
 def read_csv(spark: SparkSession, url: str, **kwargs) -> DataFrame:
     """spark read csv from url."""
     return spark.read.csv(url, **kwargs)
-
-
-# def write_to_database(df: DataFrame, url: str, table_name: str, **kwargs) -> None:
-#    """spark write dataframe to database"""
-#    (   df.write()
-#        .format()
-#        .option()
-#    )
 
 
 def select_columns(df: DataFrame, columns: Union[list[Column], list[str]]) -> DataFrame:
@@ -63,3 +60,10 @@ def parse_date_from_file_name() -> Column:
     """returns function to parse date from file name"""
 
     return F.regexp_extract(F.input_file_name(), "\\d{4}-\\d{1,2}-\\d{1,2}", 0)
+
+
+########################################################
+################## DataFrame handling ##################
+########################################################
+def remove_atomic_type(df: DataFrame, type_to_remove: DataType) -> DataFrame:
+    ...

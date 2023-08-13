@@ -63,7 +63,7 @@ if __name__ == "__main__":
     # Import package
     sys.path.insert(1, os.path.abspath("."))  # Dirty, need to fix it
     from commons.logger import LoggerProvider
-    from commons.commons import (
+    from commons.spark_helpers import (
         select_columns,
         read_csv,
         attach_column,
