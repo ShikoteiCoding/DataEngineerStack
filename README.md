@@ -43,50 +43,9 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 +------------+           +-----------+           +----------+           +----------+        +----------+
 ```
 
-## Twitter Batch Jobs
+## Spark Batch ETLs
 
-Simple usecase to show batch jobs with twitter data
-
-### Build
-
-```sh
-docker compose build
-```
-
-### Run Loader Service
-
-Run download container
-```sh
-docker compose up -d loader
-```
-
-### Run Spark Jobs
-
-Run spark container
-```sh
-docker compose up -d spark --build
-```
-
-Execute a job
-```sh
-docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_1.py
-docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_2.py
-docker compose exec spark bin/spark-submit jobs/twitter/job_twitter_data_3.py
-```
-
-### Test
-
-#### Test commons
-
-Common part is a library helping the code architecture of actual jobs.
-```sh
-docker compose exec spark python3 -m pytest "tests/commons/test_commons.py" -p no:warnings --cov="jobs" -vv
-```
-
-#### Test actual job functions
-WORKDIR is set to /opt/spark
-```sh
-docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_1.py" -p no:warnings --cov="jobs" -vv
-docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_2.py" -p no:warnings --cov="jobs" -vv
-docker compose exec spark python3 -m pytest "tests/twitter/test_job_twitter_data_3.py" -p no:warnings --cov="jobs" -vv
-```
+Go to spark README for more precision on component. Available local development options:
+- local pyspark
+- docker
+- (soon) k8s

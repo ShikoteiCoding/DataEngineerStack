@@ -8,7 +8,6 @@ import sys
 import os
 
 
-# TODO: access logger from those functions.
 def tweet_rank_per_day_per_user() -> Column:
     """compute rank of tweet per day per user"""
 

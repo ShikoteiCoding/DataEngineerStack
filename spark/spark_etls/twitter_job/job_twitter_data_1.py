@@ -7,7 +7,6 @@ import sys
 import os
 
 
-# TODO: Access logger from those functions.
 def list_regex_extract_hastags() -> Column:
     """returns function to extract hashtags from text"""
 

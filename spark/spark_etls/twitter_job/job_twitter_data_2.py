@@ -8,7 +8,6 @@ import sys
 import os
 
 
-# TODO: Access logger from those functions.
 def tweet_number_per_day_per_user() -> Column:
     """returns function to count number of tweet per day per user"""
 
