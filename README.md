@@ -6,11 +6,9 @@ Built upon event-driven architecture. Should be what modern companies use if the
 
 Not tight to any cloud provider, easy to migrate and maintain.
 
-## Global Stack
-
 For now the stack is local docker containers. K8S is in the roadmap.
 
-### Components
+## Components
 
 ```
 +-----------+           +----------+        +----------+        +----------+
@@ -22,9 +20,9 @@ For now the stack is local docker containers. K8S is in the roadmap.
 
 As we don't have any telemetry but we still wan't to play with some data, we will create a data generator and try to make it work from a config file.
 
-### Design
+## Design
 
-## Batch Jobs
+### Batch Jobs
 ```
 +------------+          +----------+        +----------+
 |            |  csv     | Pyspark  |   SQL  |          | 
@@ -33,7 +31,7 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 +------------+          +----------+        +----------+
 ```
 
-## Streaming Jobs
+### Streaming Jobs
 
 ```
 +------------+           +-----------+           +----------+           +----------+        +----------+
@@ -42,6 +40,8 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 |            |           |           |           |          |           |          |        |          |
 +------------+           +-----------+           +----------+           +----------+        +----------+
 ```
+
+# Component List
 
 ## Spark Batch ETLs
 
