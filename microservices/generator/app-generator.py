@@ -7,7 +7,7 @@ from typing import Callable
 from pathlib import Path
 from prometheus_client import start_http_server
 
-from config import load as load_config
+from definition import load as load_definition
 
 from message import SchemaBuilder
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     # Metrics to get strapped
     start_http_server(8000)
 
-    c = load_config(Path("configs/simple_generator.yaml"))
+    c = load_definition("configs/simple_generator.yaml")
 
     logging.basicConfig(level=c.log_level)
 

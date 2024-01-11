@@ -27,6 +27,3 @@ class SchemaBuilder:
 
     def build(self) -> Schema:
         ...
-
-#class Message:
-#    ...

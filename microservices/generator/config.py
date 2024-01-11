@@ -6,12 +6,16 @@ from os import getenv
 from pathlib import Path
 from ruamel.yaml import YAML
 
-def load(stream:Path|str=Path(getenv("PIPELINE_CONF", "messages/mygenerator.yaml"))):
-    """ Load config to build generator. """
-    # Read pipeline configuration as a YAML file
-    config = YAML().load(stream)
 
-    # Set globals settings from env
-    config.log_level = getenv("LOG_LEVEL", "DEBUG").upper()
+@dataclass
+class Session:
+    from_local: bool = field(default=False)
+    config_path: str = field(default="microservices/generator/config.yaml")
 
-    return config
+    @property
+    def config(self) -> dict[str, str]:
+        if self.from_local:
+            c: dict = YAML().load(Path(self.config_path))
+        else:
+            c: dict = {} # TODO: read from env
+        return c
