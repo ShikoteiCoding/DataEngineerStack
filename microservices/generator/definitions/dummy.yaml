@@ -1,17 +1,15 @@
 message:
   schema:
     - 
-      field: msg_payload
-      path: root
+      name: msg_payload
       type: dict
     -
-      field: msg_timestamp
-      path: root
+      name: msg_timestamp
       type: long
     -
-      field: field_1
-      path: root.msg_payload
+      name: field_1
+      path: msg_payload
       type: int
       func:
-        - name: const_integer
-        - params: [10]
+        name: const_integer
+        params: [10]

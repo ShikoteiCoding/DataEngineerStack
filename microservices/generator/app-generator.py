@@ -7,7 +7,7 @@ from typing import Callable
 from pathlib import Path
 from prometheus_client import start_http_server
 
-from definition import load as load_definition
+from definition import parse_definition_config as load_definition
 
 from message import SchemaBuilder
 

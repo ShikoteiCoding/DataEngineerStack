@@ -4,7 +4,7 @@ from pathlib import Path
 from ruamel.yaml import YAML
 from collections import OrderedDict
 
-def load(path: str):
+def parse_definition_config(path: str):
     """ Load definition to build generator. """
     definition = YAML().load(Path(path))
 
