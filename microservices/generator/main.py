@@ -55,10 +55,12 @@ class MessageBuilder:
     def build(self):
         fields: list[Field] = []
         for field in definition_dict["message"]["schema"]:
+            print(field)
 
             if field.get("func"):
                 func_name: str = field.get("func").get("name")
-                func_params: list = field.get("func").get("params")
+                func_params: list = field.get("func").get("params", [])
+                print(func_name, func_params)
                 func = partial(FUNCTIONS.get(func_name), *func_params) #type: ignore
             else:
                 func = partial(FUNCTIONS.get("type_value"), field.get("type")) #type: ignore
@@ -83,7 +85,7 @@ if __name__ == "__main__":
 
     logger = logging.basicConfig(level=env_config["LOG_LEVEL"])
 
-    definition_path = "microservices/generator/definitions/dummy.yaml"
+    definition_path = "microservices/generator/definitions/simple_generator.yaml"
     definition_dict = parse_definition_config(definition_path)
 
     message_builder = MessageBuilder(definition_dict)
