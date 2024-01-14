@@ -1,8 +1,5 @@
 message:
   schema:
-    - 
-      name: msg_payload
-      type: dict
     -
       name: msg_timestamp
       type: long

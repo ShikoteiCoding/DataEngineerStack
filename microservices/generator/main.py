@@ -10,14 +10,13 @@ from functions import FUNCTIONS
 
 
 def get_field_to_dict(msg: dict, field_path: list[str], func: Callable):
-    print(msg, field_path)
     if len(field_path) == 0:
         return
     if len(field_path) == 1:
         msg[field_path[0]] = func()
 
     key = field_path[0]
-    field_path = field_path[1:] # to fix
+    field_path = field_path[1:]
 
     if not key in msg:
         msg[key] = {}
@@ -42,7 +41,7 @@ class Message:
     def get_json(self) -> dict:
         msg = {}
         for field in self.fields:
-            field_path = ".".join(field.path) + field.name
+            field_path = (field.path + "." if field.path else "") + field.name
             get_field_to_dict(msg, field_path.split("."), field.func)
             
         return msg

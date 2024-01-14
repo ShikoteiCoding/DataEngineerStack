@@ -4,7 +4,6 @@ message:
     schema:
         -
             name: body
-            path: root
             type: dict
         -
             name: message
