@@ -1,11 +1,27 @@
 from message import Producer
 from entrypoint import Sink
 
-class Generator:
+from isodate import parse_duration
 
-    def __init__(self, sink: Sink, message: Producer):
+import time
+
+
+class Generator:
+    def __init__(self, definition: dict, sink: Sink, message: Producer):
         self.sink = sink
         self.message = message
+        self.parse_definition(definition)
+
+    @property
+    def interval(self) -> int:
+        return int(self._interval.total_seconds())
+
+    def parse_definition(self, definition: dict):
+        interval: str = definition["generator"]["interval"]
+        self._interval = parse_duration(interval)
 
     def run(self):
-        self.sink.post(self.message)
+
+        while True:
+            self.sink.post(self.message)
+            time.sleep(self.interval)

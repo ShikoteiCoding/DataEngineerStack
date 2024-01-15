@@ -1,5 +1,5 @@
 generator:
-    interval: 1s
+    interval: PT1S
 message:
     schema:
         -
@@ -22,6 +22,3 @@ message:
             func:
                 name: const_integer
                 params: [15]
-output:
-    api:
-        endpoint: collector:8080

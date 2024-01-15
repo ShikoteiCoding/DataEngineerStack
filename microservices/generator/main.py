@@ -22,11 +22,10 @@ if __name__ == "__main__":
     message_builder = ProducerBuilder(definition_dict)
     message = message_builder.build()
 
-    # build 
-    kafka_sink = KafkaSink({})
-
+    # build
+    kafka_sink = session.sink
     kafka_sink.connect()
 
-    generator = Generator(kafka_sink, message)
+    generator = Generator(definition_dict, kafka_sink, message)
 
     generator.run()
