@@ -55,15 +55,13 @@ class MessageBuilder:
     def build(self):
         fields: list[Field] = []
         for field in definition_dict["message"]["schema"]:
-            print(field)
 
-            if field.get("func"):
-                func_name: str = field.get("func").get("name")
-                func_params: list = field.get("func").get("params", [])
-                print(func_name, func_params)
-                func = partial(FUNCTIONS.get(func_name), *func_params) #type: ignore
+            if field["func"]:
+                func_name: str = field["func"]["name"]
+                func_params: list = field["func"].get("params", []) # can not exist
+                func = partial(FUNCTIONS["func_name"], *func_params)
             else:
-                func = partial(FUNCTIONS.get("type_value"), field.get("type")) #type: ignore
+                func = partial(FUNCTIONS["type_value"], field["type"])
 
             field_params = {
                 "name": field.get("name"),
