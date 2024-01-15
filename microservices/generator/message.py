@@ -29,11 +29,11 @@ class Field:
     func: Callable
 
 
-class Message:
+class Producer:
     def __init__(self, fields: list[Field]):
         self.fields = fields
 
-    def get_json(self) -> dict:
+    def generate_message(self) -> dict:
         msg = {}
         for field in self.fields:
             field_path = (field.path + "." if field.path else "") + field.name
@@ -42,11 +42,11 @@ class Message:
         return msg
 
 
-class MessageBuilder:
+class ProducerBuilder:
     def __init__(self, definition_dict: dict):
         self.definition_dict = definition_dict
 
-    def build(self) -> Message:
+    def build(self) -> Producer:
         fields: list[Field] = []
         for field in self.definition_dict["message"]["schema"]:
 
@@ -65,4 +65,4 @@ class MessageBuilder:
             }
             fields.append(Field(**field_params))
 
-        return Message(fields)
+        return Producer(fields)

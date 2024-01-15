@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 import logging
 
-from config import Session
+from entrypoint import Session, KafkaSink
 from definition import parse_definition_config
-from message import MessageBuilder
+from message import ProducerBuilder
+
+from generator import Generator
 
 
 if __name__ == "__main__":
@@ -17,7 +19,14 @@ if __name__ == "__main__":
     definition_path = "microservices/generator/definitions/simple_generator.yaml"
     definition_dict = parse_definition_config(definition_path)
 
-    message_builder = MessageBuilder(definition_dict)
+    message_builder = ProducerBuilder(definition_dict)
     message = message_builder.build()
-    msg = message.get_json()
-    print(msg)
+
+    # build 
+    kafka_sink = KafkaSink({})
+
+    kafka_sink.connect()
+
+    generator = Generator(kafka_sink, message)
+
+    generator.run()
