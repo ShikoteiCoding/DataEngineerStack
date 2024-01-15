@@ -17,5 +17,5 @@ class Session:
         if self.from_local:
             c: dict = YAML().load(Path(self.config_path))
         else:
-            c: dict = {} # TODO: read from env
+            c: dict = {}  # TODO: read from env
         return c
