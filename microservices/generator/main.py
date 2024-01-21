@@ -28,4 +28,4 @@ if __name__ == "__main__":
 
     generator = Generator(definition_dict, kafka_sink, message)
 
-    generator.run()
+    #generator.run()
