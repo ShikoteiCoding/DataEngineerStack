@@ -27,5 +27,4 @@ if __name__ == "__main__":
     kafka_sink.connect()
 
     generator = Generator(definition_dict, kafka_sink, message)
-
-    #generator.run()
+    generator.run()

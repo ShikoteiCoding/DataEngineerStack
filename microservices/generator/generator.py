@@ -1,4 +1,4 @@
-from message import Producer
+from message import ProducerMessage
 from entrypoint import Sink
 
 from isodate import parse_duration
@@ -7,7 +7,7 @@ import time
 
 
 class Generator:
-    def __init__(self, definition: dict, sink: Sink, message: Producer):
+    def __init__(self, definition: dict, sink: Sink, message: ProducerMessage):
         self.sink = sink
         self.message = message
         self.parse_definition(definition)

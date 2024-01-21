@@ -29,7 +29,7 @@ class Field:
     func: Callable
 
 
-class Producer:
+class ProducerMessage:
     def __init__(self, fields: list[Field]):
         self.fields = fields
 
@@ -46,7 +46,7 @@ class ProducerBuilder:
     def __init__(self, definition_dict: dict):
         self.definition_dict = definition_dict
 
-    def build(self) -> Producer:
+    def build(self) -> ProducerMessage:
         fields: list[Field] = []
         for field in self.definition_dict["message"]["schema"]:
 
@@ -65,4 +65,4 @@ class ProducerBuilder:
             }
             fields.append(Field(**field_params))
 
-        return Producer(fields)
+        return ProducerMessage(fields)
