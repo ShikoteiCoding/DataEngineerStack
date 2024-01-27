@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.12
 
 WORKDIR /code
 
@@ -12,4 +12,5 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY wait-for-collector.sh wait-for-collector.sh
 RUN ["chmod", "+x", "/code/wait-for-collector.sh"]
-CMD ["./wait-for-collector.sh", "collector", "python3", "app-generator.py"]
+CMD ["./wait-for-collector.sh", "collector", "python3", "main.py"]
+

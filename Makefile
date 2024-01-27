@@ -6,3 +6,7 @@ build_broker:
 start_broker:
 	cd devops/kafka/ && \
 	docker-compose up zookeeper kafka
+
+build_generator:
+	cd microservices/generator && \
+	docker build .
