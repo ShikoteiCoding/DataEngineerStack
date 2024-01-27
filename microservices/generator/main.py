@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     logger = logging.basicConfig(level=env_config["LOG_LEVEL"])
 
-    definition_path = "microservices/generator/definitions/simple_generator.yaml"
+    definition_path = env_config["DEFINITION_FOLDER"]
     definition_dict = parse_definition_config(definition_path)
 
     message_builder = ProducerBuilder(definition_dict)

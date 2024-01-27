@@ -5,6 +5,7 @@ services:
 
   zookeeper:
     restart: always
+    container_name: zookeeper
     image: docker.io/bitnami/zookeeper:3.8
     ports:
       - "2181:2181"
@@ -17,9 +18,11 @@ services:
 
   kafka:
     restart: always
+    container_name: kafka
     image: docker.io/bitnami/kafka:3.3
     ports:
-      - "9093:9093"
+      - "9093:9093" # from host
+      - "9092:9092" # from container network
     volumes:
       - "kafka-volume:/bitnami"
     environment:
