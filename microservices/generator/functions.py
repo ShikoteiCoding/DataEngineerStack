@@ -1,5 +1,10 @@
+from dateutil.parser import parse
 from typing import Callable
 from datetime import datetime, timezone
+
+def const_datetime(val: str) -> str:
+    """parse str as string"""
+    return parse(val).strftime('%s')
 
 
 def const_integer(val: int) -> int:
@@ -10,8 +15,8 @@ def const_str(val: str) -> str:
     return val
 
 
-def now() -> datetime:
-    return datetime.now(tz=timezone.utc)
+def now() -> str: # datetime not json convertible, store it as 
+    return datetime.now(tz=timezone.utc).strftime('%s')
 
 
 def type_value(type: str):
@@ -22,6 +27,8 @@ def type_value(type: str):
     elif type == "int":
         return 0
     elif type == "str":
+        return ""
+    elif type == "datetime":
         return ""
 
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import os
-import socket
+import json
 
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -39,8 +38,9 @@ class KafkaSink(Sink):
         self.producer: Producer = Producer(conf)
 
     def post(self, producer: ProducerMessage, topic: str = "test"):
-        print("i'm posting")
-        self.producer.produce(topic, key="key", value="value", callback=acked)
+        msg = producer.generate_message()
+        print(f"posting msg = {msg}")
+        self.producer.produce(topic, key="key", value=json.dumps(msg), callback=acked)
         self.producer.poll(1)
 
 
