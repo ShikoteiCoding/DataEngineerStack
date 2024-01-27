@@ -12,7 +12,7 @@ from config import Config
 @dataclass
 class Session:
     from_local: bool = field(default=False)
-    config_path: str = field(default="microservices/generator/config.yaml")
+    config_path: str = field(default="/code/app/config.yaml")
 
     @property
     def config(self) -> Config:
