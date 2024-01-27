@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+
+  generator:
+    build:
+      context: ./generator
+      dockerfile: Dockerfile
+    container_name: generator
+    volumes:
+      - ./generator/:/code/app/
+    command: python3 app/main.py
