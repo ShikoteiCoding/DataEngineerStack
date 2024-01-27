@@ -9,4 +9,8 @@ start_broker:
 
 build_generator:
 	cd microservices/generator && \
-	docker build .
+	docker build --tag 'generator' .
+
+start_generator:
+	cd microservices/generator && \
+	docker-compose up generator
