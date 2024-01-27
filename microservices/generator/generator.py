@@ -23,5 +23,5 @@ class Generator:
     def run(self):
 
         while True:
-            self.sink.post(self.message)
+            self.sink.post(self.message, topic="test")
             time.sleep(self.interval)

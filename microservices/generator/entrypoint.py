@@ -5,66 +5,8 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from ruamel.yaml import YAML
-from message import ProducerMessage
-from confluent_kafka import Producer
-from typing import Any
-
-
-def acked(err, msg):
-    if err is not None:
-        print("Failed to deliver message: %s: %s" % (str(msg), str(err)))
-    else:
-        print("Message produced: %s" % (str(msg)))
-
-
-class Sink:
-    def test_connection(self):
-        ...
-
-    def connect(self):
-        print(f"connecting to default Sink...")
-
-    def post(self, producer: ProducerMessage):
-        ...
-
-
-class KafkaSink(Sink):
-    def __init__(self, config: Config):
-        self.config = config
-
-    def connect(self):
-        conf = self.config.kafka_conf
-        print(f"connecting to kafka with conf {conf}...")
-        self.producer: Producer = Producer(conf)
-
-    def post(self, producer: ProducerMessage, topic: str = "test"):
-        msg = producer.generate_message()
-        print(f"posting msg = {msg}")
-        self.producer.produce(topic, key="key", value=json.dumps(msg), callback=acked)
-        self.producer.poll(1)
-
-
-class ConsoleSink(Sink):
-    def __init__(self, config: Config):
-        self.config = config
-
-    def post(self, producer: ProducerMessage):
-        print(producer.generate_message())
-
-
-class Config(dict):
-    def __init__(self, config: dict):
-        super().__init__(config)
-
-    @property
-    def kafka_conf(self) -> dict:
-        conf = {
-            "bootstrap.servers": self.get("KAFKA_BOOTSTRAP_SERVERS"),
-        }
-        return conf
-
-    def __getitem__(self, __key: Any, __default: Any = None) -> Any:
-        return self.get(__key, __default)
+from sinks import Sink, ConsoleSink, KafkaSink
+from config import Config
 
 
 @dataclass
