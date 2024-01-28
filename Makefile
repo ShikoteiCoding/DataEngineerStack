@@ -7,17 +7,18 @@ build_generator:
 	cd microservices && \
 	docker build --tag 'generator' generator/.
 
+init:
+	docker network create cluster
+
 start_broker:
 	cd devops/kafka/ && \
-	docker-compose up zookeeper kafka
+	docker-compose up zookeeper kafka && \
+	docker network connect cluster
 
 start_generator:
 	cd microservices && \
-	docker-compose up generator
+	docker-compose up generator && \
+	docker network connect cluster
 
-start_network:
-	docker network rm cluster && \
-	docker network create cluster && \
-	docker network connect cluster kafka && \
-	docker network connect cluster zookeeper && \
-	docker network connect cluster generator
+make clear:
+	docker network rm cluster
