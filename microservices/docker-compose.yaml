@@ -3,10 +3,9 @@ version: "3.8"
 services:
 
   generator:
-    build:
-      context: ./generator
-      dockerfile: Dockerfile
+    image: generator
     container_name: generator
     volumes:
-      - ./generator/:/code/app/
+      - ${PWD}/microservices/generator/:/code/app/
+      - ${PWD}/k8s/generator/local_docker.env:/code/k8s/generator/.env
     command: python3 app/main.py

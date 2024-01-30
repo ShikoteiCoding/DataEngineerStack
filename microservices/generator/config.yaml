@@ -1,6 +1,0 @@
-LOG_LEVEL: DEBUG
-
-DEFINITION_FOLDER: "/code/app/definitions/simple_generator.yaml"
-
-SINK_TYPE: kafka
-KAFKA_BOOTSTRAP_SERVERS: "kafka:29092"

@@ -3,3 +3,4 @@ ruamel.yaml==0.18.5
 isodate==0.6.1
 confluent-kafka==2.3.0
 python-dateutil==2.8.2
+python-dotenv==1.0.1

@@ -13,12 +13,12 @@ init:
 start_broker:
 	cd devops/kafka/ && \
 	docker-compose up zookeeper kafka && \
-	docker network connect cluster
+	docker network connect cluster zookeeper && \
+	docker network connect cluster kafka
 
 start_generator:
-	cd microservices && \
-	docker-compose up generator && \
-	docker network connect cluster
+	docker-compose --file microservices/docker-compose.yaml up generator && \
+	docker network connect cluster generator
 
 make clear:
 	docker network rm cluster

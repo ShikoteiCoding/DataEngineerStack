@@ -41,11 +41,9 @@ As we don't have any telemetry but we still wan't to play with some data, we wil
 +------------+           +-----------+           +----------+           +----------+        +----------+
 ```
 
-# Component List
-
-## Spark Batch ETLs
-
-Go to spark README for more precision on component. Available local development options:
-- local pyspark
-- docker
-- (soon) k8s
+# Wants to do
+- spark instead of pyspark
+- deploy to aws
+- ci/cd
+- schema registry
+- tokenization

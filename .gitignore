@@ -3,7 +3,6 @@
 **/venv/
 /data-full/
 /data/
-.env
 **/__pycache__
 **/.DS_Store
 **/.pytest_cache
