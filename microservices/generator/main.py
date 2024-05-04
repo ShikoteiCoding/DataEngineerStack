@@ -1,26 +1,21 @@
 import logging
 
 from entrypoint import Session
-from message import ProducerBuilder
+from message import SchemaBuilder
 
 from generator import Generator
 
 if __name__ == "__main__":
 
-    session = Session()
+    session = Session().load_config().load_definition()
 
-    env_config = session.config
+    logger = logging.basicConfig(level=session.config["LOG_LEVEL"])
 
-    logger = logging.basicConfig(level=env_config["LOG_LEVEL"])
-
-    definition_dict = session.definition_config
-
-    message_builder = ProducerBuilder(definition_dict)
-    message = message_builder.build()
+    schema = SchemaBuilder(session.schema_definition).build()
 
     # build
-    kafka_sink = session.sink
-    kafka_sink.connect()
+    sink = session.sink
+    sink.connect()
 
-    generator = Generator(definition_dict, kafka_sink, message)
+    generator = Generator(session.generator_metadata, sink, schema)
     generator.run()

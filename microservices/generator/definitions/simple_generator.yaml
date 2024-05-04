@@ -1,24 +1,23 @@
 generator:
     interval: PT1S
-message:
-    schema:
-        -
-            name: timestamp
-            path: body
-            type: datetime
-            func:
-                name: now
-        -
-            name: metric
-            path: body.message
-            type: str
-            func:
-                name: const_str
-                params: [TELEMETRY_MEASURE]
-        -
-            name: value
-            path: body.message
-            type: int
-            func:
-                name: const_integer
-                params: [15]
+schema:
+    -
+        name: timestamp
+        path: body
+        type: datetime
+        func:
+            name: now
+    -
+        name: metric
+        path: body.message
+        type: str
+        func:
+            name: const_str
+            params: [TELEMETRY_MEASURE]
+    -
+        name: value
+        path: body.message
+        type: int
+        func:
+            name: const_integer
+            params: [15]

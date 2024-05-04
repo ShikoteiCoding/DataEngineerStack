@@ -2,7 +2,7 @@ import json
 
 from confluent_kafka import Producer
 
-from message import ProducerMessage
+from message import Schema
 from config import Config
 
 
@@ -10,7 +10,11 @@ def acked(err, msg):
     if err is not None:
         print("failed to deliver message: %s: %s" % (str(msg), str(err)))
     else:
-        print("message delivered to topic = '{}' - partition = [{}]".format(msg.topic(), msg.partition()))
+        print(
+            "message delivered to topic = '{}' - partition = [{}]".format(
+                msg.topic(), msg.partition()
+            )
+        )
 
 
 class Sink:
@@ -20,7 +24,7 @@ class Sink:
     def connect(self):
         print(f"connecting to default Sink...")
 
-    def post(self, producer: ProducerMessage, **kwargs):
+    def post(self, producer: Schema, **kwargs):
         ...
 
 
@@ -33,7 +37,7 @@ class KafkaSink(Sink):
         print(f"connecting to kafka with conf {conf}...")
         self.producer: Producer = Producer(conf)
 
-    def post(self, producer: ProducerMessage, topic: str = "test"):
+    def post(self, producer: Schema, topic: str = "test"):
         msg = producer.generate_message()
         print(f"posting msg = {msg}")
         self.producer.produce(topic, json.dumps(msg), callback=acked)
@@ -44,5 +48,5 @@ class ConsoleSink(Sink):
     def __init__(self, config: Config):
         self.config = config
 
-    def post(self, producer: ProducerMessage):
+    def post(self, producer: Schema, **kwargs):
         print(producer.generate_message())

@@ -29,7 +29,7 @@ class Field:
     func: Callable
 
 
-class ProducerMessage:
+class Schema:
     def __init__(self, fields: list[Field]):
         self.fields = fields
 
@@ -42,13 +42,13 @@ class ProducerMessage:
         return msg
 
 
-class ProducerBuilder:
-    def __init__(self, definition_dict: dict):
-        self.definition_dict = definition_dict
+class SchemaBuilder:
+    def __init__(self, definition: dict):
+        self.definition_dict = definition
 
-    def build(self) -> ProducerMessage:
+    def build(self) -> Schema:
         fields: list[Field] = []
-        for field in self.definition_dict["message"]["schema"]:
+        for field in self.definition_dict:
 
             if field["func"]:
                 func_name: str = field["func"]["name"]
@@ -65,4 +65,4 @@ class ProducerBuilder:
             }
             fields.append(Field(**field_params))
 
-        return ProducerMessage(fields)
+        return Schema(fields)

@@ -1,5 +1,6 @@
 from typing import Any
 
+
 class Config(dict):
     def __init__(self, config: dict):
         super().__init__(config)
