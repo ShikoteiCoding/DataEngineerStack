@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generator
+  namespace: generator
+  labels:
+    app: generator
+    component: generator
+spec:
+  replicas: 1
+  strategy:
+  type: "RollingUpdate"
+  selector:
+    matchLabels:
+      app: generator
+      componenent: generator
+  template:
+    metadata:
+      labels:
+        app: generator
+        componenent: generator
+    spec:
+      serviceAccountName: generator
+      containers:
+        - name: generator
+          image: generator
+          envFrom:
+            - configMapRef:
+                name: "config-env"

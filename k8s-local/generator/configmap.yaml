@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-env
+  namespace: generator
+  labels:
+    app: generator
+data:
+  FROM_ENV: "true"
+  ENV: "local"
+  LOG_LEVEL: "DEBUG"
+  FOLDER_DEFINITIONS: "definitions/simple_generator.yaml"
+  SINK_TYPE: "console"
+  KAFKA_BOOTSTRAP_SERVERS: "localhost:9092"

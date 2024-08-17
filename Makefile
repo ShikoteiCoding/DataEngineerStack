@@ -1,24 +1,10 @@
-# useless for now as no dockerfile
-build_broker:
-	cd devops/kafka/ && \
-	docker-compose build zookeeper kafka
-
+# Microservices
 build_generator:
-	cd microservices && \
-	docker build --tag 'generator' generator/.
-
-init:
-	docker network create cluster
-
-start_broker:
-	cd devops/kafka/ && \
-	docker-compose up zookeeper kafka && \
-	docker network connect cluster zookeeper && \
-	docker network connect cluster kafka
+	cd microservices/generator && docker build --tag generator .
 
 start_generator:
-	docker-compose --file microservices/docker-compose.yaml up generator && \
-	docker network connect cluster generator
+	kubectl apply -f k8s-local/generator/namespace.yaml
+	kubectl apply -f k8s-local/generator/ --validate=false
 
-make clear:
-	docker network rm cluster
+stop_generator:
+	kubectl delete --ignore-not-found -f k8s-local/generator/
