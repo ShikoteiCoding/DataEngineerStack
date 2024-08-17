@@ -1,5 +1,5 @@
 from message import Schema
-from entrypoint import Sink
+from session import Sink
 
 from isodate import parse_duration
 from datetime import timedelta

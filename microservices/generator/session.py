@@ -18,10 +18,15 @@ ENV_FILENAME = Path(".env")  # get renamed in volumes
 
 class Session:
     def __init__(self):
-        self.env_path: Path = ROOT.joinpath(ENV_SUFFIX).joinpath(
-            ENV_FILENAME
-        )  # read first to know current env setup
-        load_dotenv(self.env_path)
+        from_env = os.getenv("FROM_ENV", False)
+
+        if not from_env:
+            self.env_path: Path = ROOT.joinpath(ENV_SUFFIX).joinpath(
+                ENV_FILENAME
+            )  # read first to know current env setup
+            load_dotenv(self.env_path)
+
+
         self.session_mode: str = os.getenv("ENV", "local")
         self._config: Config = Config({})
         self._definition: dict = {}

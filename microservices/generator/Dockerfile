@@ -7,10 +7,8 @@ RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV PYTHONPATH /code
 
-COPY requirements.txt requirements.txt
+COPY . /code
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY wait-for-collector.sh wait-for-collector.sh
-RUN ["chmod", "+x", "/code/wait-for-collector.sh"]
-CMD ["./wait-for-collector.sh", "zookeeper"]
-
+RUN ["chmod", "+x", "/code/run.sh"]
+CMD ["run.sh"]

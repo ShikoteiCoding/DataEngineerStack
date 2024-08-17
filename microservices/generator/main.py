@@ -1,6 +1,6 @@
 import logging
 
-from entrypoint import Session
+from session import Session
 from message import SchemaBuilder
 
 from generator import Generator
